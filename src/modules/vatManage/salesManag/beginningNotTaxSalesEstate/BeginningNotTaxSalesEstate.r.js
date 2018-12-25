@@ -24,6 +24,40 @@ const formItemStyle = {
         }
     }
 }
+const markFields = [
+    {
+        label:'房间是否期初已结转',
+        fieldName:'check',
+        type:'select',
+        notShowAll:true,
+        formItemStyle:{
+            labelCol:{
+                span:10
+            },
+            wrapperCol:{
+                span:14
+            }
+        },
+        span:22,
+        options:[
+            {
+                text:'是',
+                value:'1'
+            },{
+                text:'否',
+                value:'0'
+            }
+        ],
+        fieldDecoratorOptions:{
+            rules:[
+                {
+                    required:true,
+                    message:'请选择房间是否期初已结转'
+                }
+            ]
+        }
+    }
+]
 const searchFields =(disabled,declare)=>(getFieldValue)=> {
     return [
         {
@@ -380,6 +414,28 @@ class unBilledSalesEstate extends Component{
                         })
                     },
                     extra:<div>
+                        {
+                            (disabled && handle) && composeBotton([
+                                {
+                                    type:'mark',
+                                    buttonOptions:{
+                                        text:'期初结转',
+                                        icon:'pushpin-o'
+                                    },
+                                    modalOptions:{
+                                        title:'标记类型'
+                                    },
+                                    formOptions:{
+                                        filters: filters,
+                                        selectedRowKeys: selectedRowKeys,
+                                        url:"/accountInitialUntaxedSales/knots",
+                                        fields: markFields,
+                                        onSuccess:this.refreshTable,
+                                    },
+                                    userPermissions:['1955001'],
+                                },
+                            ])
+                        }
                         {
                             JSON.stringify(filters)!=='{}' &&composeBotton([
                                 {

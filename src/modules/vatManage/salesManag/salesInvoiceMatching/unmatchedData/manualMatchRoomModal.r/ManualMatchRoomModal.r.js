@@ -5,6 +5,7 @@ import React,{Component} from 'react';
 import {Button,Modal,Row,Col,message,Card,Input,Icon} from 'antd';
 import {request,fMoney} from 'utils'
 import {SearchTable} from 'compoments'
+import PopModal from './popModal.r'
 
 const formItemStyle={
     labelCol:{
@@ -14,7 +15,7 @@ const formItemStyle={
         span:16
     }
 }
-const searchFields = selectedData=> (getFieldValue)=> {
+const searchFields = (context,selectedData) => (getFieldValue)=> {
     return [
         {
             label:'利润中心',
@@ -88,7 +89,7 @@ const searchFields = selectedData=> (getFieldValue)=> {
         },
         {
             label:'结转状态',
-            fieldName:'taxIdentificationCode1',
+            fieldName:'knots',
             type:'select',
             span:6,
             formItemStyle,
@@ -101,7 +102,14 @@ const searchFields = selectedData=> (getFieldValue)=> {
                     text:'已结转',
                     value:'1'
                 }
-            ]
+            ],
+            fieldDecoratorOptions: {
+                initialValue: context.isPositive() ? '0' : ''
+            },
+            componentProps: {
+                disabled: context.isPositive() ? true : false,
+
+            }
         }
     ]
 }
@@ -117,19 +125,23 @@ const getColumns = context => [
                 color:'#1890ff',
                 cursor:'pointer'
             }} onClick={()=>{
-                const modalRef = Modal.confirm({
-                    title: '友情提醒',
-                    content: '是否要匹配该条数据？',
-                    okText: '确定',
-                    cancelText: '取消',
-                    onOk:()=>{
-                        modalRef && modalRef.destroy();
-                        context.matchData(context.props.selectedData['id'],record.id)
-                    },
-                    onCancel() {
-                        modalRef.destroy()
-                    },
-                });
+                if (context.isPositive()) {
+                    const modalRef = Modal.confirm({
+                        title: '友情提醒',
+                        content: '是否要匹配该条数据？',
+                        okText: '确定',
+                        cancelText: '取消',
+                        onOk:()=>{
+                            modalRef && modalRef.destroy();
+                            context.matchData(context.props.selectedData['id'],record.id)
+                        },
+                        onCancel() {
+                            modalRef.destroy()
+                        },
+                    });
+                } else {
+                    context.togglesPopModalVisible(true);
+                }
             }}>
                 <Icon type="check-circle-o" />
             </span>
@@ -174,7 +186,8 @@ const getColumns = context => [
 class ManualMatchRoomModal extends Component{
     static defaultProps={
         type:'edit',
-        visible:true
+        visible:true,
+        popModalVisible:false,
     }
     state={
         matching:false,
@@ -293,10 +306,27 @@ class ManualMatchRoomModal extends Component{
 
         return children
     }
+    isPositive = () => {
+        const { selectedData } = this.props;
+        if (!!selectedData.taxAmount) {
+            return Number(selectedData.taxAmount) > 0 ? true : false;
+        }
+    }
+    togglesPopModalVisible = popModalVisible => {
+        this.setState({
+            popModalVisible
+        });
+    // const params = {
+    //     month: '',
+    //     knots: '',
+    //     amount: ''
+    // }
+    };
     render(){
         const props = this.props;
         const {title} = this.props;
-        const {tableKey,matching} = this.state;
+        const {tableKey,matching,popModalVisible} = this.state;
+        console.log('declare',this.props.declare)
         return(
             <Modal
                 maskClosable={false}
@@ -353,7 +383,7 @@ class ManualMatchRoomModal extends Component{
                     key={tableKey}
                     spinning={matching}
                     searchOption={{
-                        fields:searchFields(this.props.selectedData),
+                        fields:searchFields(this,this.props.selectedData),
                         cardProps:{
                             title:'查询条件'
                         }
@@ -361,10 +391,15 @@ class ManualMatchRoomModal extends Component{
                     tableOption={{
                         pageSize:100,
                         columns:getColumns(this),
-                        url:`/output/invoice/marry/manual/list?mainId=${props.selectedData['mainId']}`,
+                        url:`/output/invoice/marry/manual/list?mainId=${props.selectedData['mainId']}&amount=${props.selectedData['amount']}&month=${props.declare['authMonth']}`,
                     }}
                 >
                 </SearchTable>
+                <PopModal 
+                    visible={popModalVisible}
+                    title='红冲类型'
+                    toggleModalVisible={this.togglesPopModalVisible}
+                />
             </Modal>
         )
     }

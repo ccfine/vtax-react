@@ -64,6 +64,11 @@ const columns = (context,isEdit) =>[{
         width:'200px',
     },
     {
+        title: "处置日期",
+        dataIndex: "inactiveDate",
+        width:'100px',
+    },
+    {
         title: "占地面积",
         dataIndex: "areaCovered",
         width:'100px',
@@ -213,7 +218,7 @@ export default class ExternalAccess extends Component{
                             })
                         },
                         scroll:{
-                            x:2700,
+                            x:2600,
                             y:window.screen.availHeight-430,
                         },
                     }}

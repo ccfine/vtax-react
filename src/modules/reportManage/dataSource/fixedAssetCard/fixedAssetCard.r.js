@@ -238,6 +238,11 @@ const getColumns = context => [
         width:'100px',
     },
     {
+        title: "处置日期",
+        dataIndex: "inactiveDate",
+        width:'100px',
+    },
+    {
         title: "建筑面积",
         dataIndex: "areaCovered",
         width:'100px',
@@ -302,7 +307,7 @@ export default class fixedAssetCard extends Component {
                     onSuccess:(filters)=>{
                         this.setState({filters})
                     },
-                    scroll:{ x: 2270,y:window.screen.availHeight-360,},
+                    scroll:{ x: 2370,y:window.screen.availHeight-360,},
                     extra: (
                         <span>
                             {/*

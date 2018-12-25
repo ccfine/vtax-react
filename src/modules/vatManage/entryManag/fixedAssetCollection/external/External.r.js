@@ -88,6 +88,11 @@ const columns=[
         width:'100px',
     },
     {
+        title: "处置日期",
+        dataIndex: "inactiveDate",
+        width:'100px',
+    },
+    {
         title: "建筑面积",
         dataIndex: "areaCovered",
         width:'100px',
@@ -185,7 +190,7 @@ const columns=[
                         })
                     },
                     scroll:{
-                        x:1800,
+                        x:1900,
                         y:window.screen.availHeight-380-(disabled?50:0),
                     },
                 }}

@@ -237,10 +237,10 @@ const getSearchFields = (disabled,declare) => (getFieldValue) => [
 ]
 
 const getColumns = (context) => [{
-    title: "利润中心",
-    dataIndex: "profitCenterName",
-    width: "200px"
-  },
+        title: "利润中心",
+        dataIndex: "profitCenterName",
+        width: "200px"
+    },
     {
         title: "数据来源",
         dataIndex: "sourceType",
@@ -275,9 +275,19 @@ const getColumns = (context) => [{
         title: "发票类型",
         dataIndex: "invoiceType",
         width:'100px',
-        render: (text, record) => (
-            <p className="apply-form-list-p1">{text==='s'?'增值税专用发票':(text==='c'?'增值税普通发票':'')}</p>
-        ),
+        render: (text, record) => {
+            let res = '';
+            if (text === 's') {
+                res = '增值税专用发票'
+            } else if (text === 'c') {
+                res = '增值税普通发票'
+            } else if (text === 'ct') {
+                res = '通行费增值税电子普通发票'
+            } else {
+                res = ''
+            }
+            return (<p className="apply-form-list-p1">{res}</p>)
+        }
     },
     {
         title: "发票代码",
@@ -557,7 +567,7 @@ class InvoiceCollection extends Component {
                         columns: getColumns(this),
                         url: `/income/invoice/collection/list${handle ? '?handle=true' : ''}`,
                         key: tableUpDateKey,
-                        scroll: { x: 2140, y:window.screen.availHeight-380},
+                        scroll: { x: 2150, y:window.screen.availHeight-380},
                         rowSelection:isCheck?{
                             getCheckboxProps: record => ({
                                 disabled: parseInt(record.sourceType, 0)  === 2, // Column configuration not to be checked

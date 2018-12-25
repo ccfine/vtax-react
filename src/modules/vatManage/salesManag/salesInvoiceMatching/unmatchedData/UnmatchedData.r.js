@@ -309,7 +309,7 @@ class UnmatchedData extends Component{
                     },
                 }}
             >
-                <ManualMatchRoomModal title="手工匹配房间" selectedData={selectedData} refreshTable={this.props.refreshTabs} visible={visible} toggleModalVisible={this.toggleModalVisible} />
+                <ManualMatchRoomModal title="手工匹配房间" declare={declare} selectedData={selectedData} refreshTable={this.props.refreshTabs} visible={visible} toggleModalVisible={this.toggleModalVisible} />
             </SearchTable>
         )
     }

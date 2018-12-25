@@ -160,9 +160,19 @@ const columns = [
       width: "200px"
     },
     {
+        title: "纳税主体编码",
+        dataIndex: "taxNum",
+        width: "100px",
+    },
+    {
       title: '纳税主体',
       dataIndex: 'mainName',
       width: "200px"
+    },
+    {
+        title: "纳税人识别号",
+        dataIndex: "code",
+        width: "100px",
     },
     {
       title: "申报期间",
@@ -225,7 +235,17 @@ const columns = [
       title: "申报归档",
       dataIndex: "fileStatus",
       width: "200px"
-    }
+    },
+    {
+        title: "应纳税额合计",
+        dataIndex: "totalAddedAmountCommonly",
+        width: "150px"
+    },
+    {
+        title: "预征税款合计",
+        dataIndex: "totalPreTaxAmount",
+        width: "150px"
+    },
 ]
 
 export default class TaxReturnProgressTrackTable extends Component{
@@ -276,7 +296,7 @@ export default class TaxReturnProgressTrackTable extends Component{
                             totalSource
                         })
                     },
-                    scroll:{ x: 1400, y:window.screen.availHeight-450},
+                    scroll:{ x: 2300, y:window.screen.availHeight-450},
                 }}
             />
         )

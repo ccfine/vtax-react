@@ -152,6 +152,9 @@ const columns = [
             if(text==='c'){
                 invoiceTypeText = '普票'
             }
+            if (text==='ct') {
+                invoiceTypeText = '通行费增值税电子普通发票'
+            }
             return invoiceTypeText;
         },
         width:'100px',
