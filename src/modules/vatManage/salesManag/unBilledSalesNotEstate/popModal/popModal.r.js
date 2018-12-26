@@ -345,7 +345,7 @@ class PopModal extends Component {
                                     },
                                     fieldDecoratorOptions: {
                                         initialValue:record && record.stagesId? {label:record.stagesName,key:record.stagesId }: undefined,
-                                        rules: this.state.noTaxMethod ? [
+                                        rules: !this.state.noTaxMethod ? [
                                             {
                                                 required: true,
                                                 message: '请选择项目分期'
