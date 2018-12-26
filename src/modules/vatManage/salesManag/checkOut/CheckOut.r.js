@@ -111,8 +111,8 @@ const columns = [
     },
     {
         title:'项目分期',
-        dataIndex:'itemName',
-        width:'150px',
+        dataIndex:'stagesName',
+        width:'200px',
     },
     {
         title:'房间编码',
@@ -122,7 +122,7 @@ const columns = [
     {
         title:'房间路址',
         dataIndex:'htRoomName',
-        width:'150px',
+        width:'250px',
     },
     {
         title:'税率',
@@ -141,21 +141,21 @@ const columns = [
         children:[
             {
                 title:'待红冲增值税收入确认金额',
-                dataIndex:'sumTotalPrice',
+                dataIndex:'confirmedPrice',
                 render:text=>fMoney(text),
                 className:'table-money',
                 width:'150px',
             },
             {
                 title:'待红冲增值税开票金额',
-                dataIndex:'sumTotalAmount',
+                dataIndex:'invoiced',
                 render:text=>fMoney(text),
                 className:'table-money',
                 width:'150px',
             },
             {
                 title:'待红冲未开具发票销售金额',
-                dataIndex:'sumNoInvoiceSales',
+                dataIndex:'totalPrice',
                 render:text=>fMoney(text),
                 className:'table-money',
                 width:'150px',
@@ -167,28 +167,28 @@ const columns = [
         children:[
             {
                 title:'本期红冲增值税收入确认金额',
-                dataIndex:'totalPrice',
+                dataIndex:'returnedConfirmedPrice',
                 render:text=>fMoney(text),
                 className:'table-money',
                 width:'150px',
             },
             {
                 title:'本期红冲增值税开票金额',
-                dataIndex:'totalAmount',
+                dataIndex:'returnedInvoiced',
                 render:text=>fMoney(text),
                 className:'table-money',
                 width:'150px',
             },
             {
                 title:'本期红冲未开具发票销售金额',
-                dataIndex:'noInvoiceSales',
+                dataIndex:'returnedTotalPrice',
                 render:text=>fMoney(text),
                 className:'table-money',
                 width:'150px',
             },
             {
                 title:'本期红冲未开具发票销项税额',
-                dataIndex:'endNoInvoiceSales',
+                dataIndex:'returnedTaxPrice',
                 render:text=>fMoney(text),
                 className:'table-money',
                 width:'150px',
@@ -256,25 +256,25 @@ class CheckOut extends Component{
                     key:tableKey,
                     pageSize:100,
                     columns:columns,
-                    url:`/account/output/notInvoiceSale/realty/list${handle ? '?handle=true' : ''}`,
+                    url:`/accountOutputRoomReturned/list${handle ? '?handle=true' : ''}`,
                     extra:<div>
                         {
                             JSON.stringify(filters)!=='{}' && composeBotton([{
                                 type:'fileExport',
-                                url:'account/output/notInvoiceSale/realty/export',
+                                url:'/accountOutputRoomReturned/export',
                                 params:filters,
                                 title:'导出',
-                                userPermissions:['1351007'],
+                                userPermissions:['2201007'],
                             }])
                         }
                         {
                             (disabled && handle) && composeBotton([
                             {
                                 type:'reset',
-                                url:'/account/output/notInvoiceSale/realty/reset',
+                                url:'/accountOutputRoomReturned/reset',
                                 params:filters,
                                 onSuccess:this.refreshTable,
-                                userPermissions:['1351009'],
+                                userPermissions:['2201009'],
                             }],statusParam)
                         }
                         <TableTotal type={3} totalSource={totalSource} data={
@@ -282,27 +282,19 @@ class CheckOut extends Component{
                                 {
                                     title:'合计',
                                     total:[
-                                        {title: '期末未开具发票销售额', dataIndex: 'allTotalNoInvoiceSales'},
+                                        {title: '本期红冲增值税收入确认金额', dataIndex: 'returnedConfirmedPrice'},
 
-                                        {title: '上期末增值税收入确认金额', dataIndex: 'allSumTotalPrice'},
-                                        {title: '上期末增值税开票金额', dataIndex: 'allSumTotalAmount'},
-                                        {title: '上期末未开具发票销售额', dataIndex: 'allSumNoInvoiceSales'},
-
-                                        {title: '本期增值税收入确认金额', dataIndex: 'allTotalPrice'},
-                                        {title: '本期增值税开票金额', dataIndex: 'allTotalAmount'},
-                                        {title: '本期未开具发票销售额', dataIndex: 'allNoInvoiceSales'},
-
-                                        {title: '本期末增值税收入确认金额', dataIndex: 'allEndTotalPrice'},
-                                        {title: '本期末增值税开票金额', dataIndex: 'allEndTotalAmount'},
-                                        {title: '本期末未开具发票销售额', dataIndex: 'allEndNoInvoiceSales'},
+                                        {title: '本期红冲增值税开票金额', dataIndex: 'returnedInvoiced'},
+                                        {title: '本期红冲未开具发票销售金额', dataIndex: 'returnedTotalPrice'},
+                                        {title: '本期红冲未开具发票销项税额', dataIndex: 'returnedTaxPrice'},
                                     ],
                                 }
                             ]
                         } />
                     </div>,
                     scroll:{
-                        x:2250,
-                        y:window.screen.availHeight-430-(disabled?50:0),
+                        x:2000,
+                        // y:window.screen.availHeight-430-(disabled?50:0),
                     },
                     onTotalSource: (totalSource) => {
                         this.setState({

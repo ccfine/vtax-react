@@ -94,7 +94,7 @@ const SalesManag_Routes = [
             url:`${ICON_URL_PATH}beginningNotTaxSalesEstate.svg`,
             backgroundColor:'#7ED530'
         },
-        authorityInfo:salesManag['beginningNotTaxSalesEstate'].options,
+        authorityInfo:salesManag['checkOutAccount'].options,
         exact:true,
     },{
         path:`${PATH}/beginningNotTaxSalesEstate`,
