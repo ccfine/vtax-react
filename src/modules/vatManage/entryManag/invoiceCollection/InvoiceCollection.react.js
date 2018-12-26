@@ -570,7 +570,7 @@ class InvoiceCollection extends Component {
                         scroll: { x: 2150, y:window.screen.availHeight-380},
                         rowSelection:isCheck?{
                             getCheckboxProps: record => ({
-                                disabled: parseInt(record.sourceType, 0)  === 2, // Column configuration not to be checked
+                                disabled: false //parseInt(record.sourceType, 0)  === 2, // Column configuration not to be checked
                             }),
                         }:undefined,
                         onRowSelect:isCheck?(selectedRowKeys)=>{
