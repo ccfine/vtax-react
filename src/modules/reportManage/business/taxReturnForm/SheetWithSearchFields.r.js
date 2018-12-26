@@ -254,7 +254,7 @@ class SheetWithSearchFields extends Component{
                                     onClick:()=>{
                                         this.togglesPopModalVisible(true);
                                     },
-                                    userPermissions:['1915015'],
+                                    userPermissions:['1911004'],
                                 }]) : null
                             }
                             {
