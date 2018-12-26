@@ -156,7 +156,7 @@ const columns = [
     {
         title: '转出项目',
         dataIndex: 'zcxmName',
-        width:'100px',
+        // width:'100px',
     },
     {
         title: '其他扣税凭证类型',

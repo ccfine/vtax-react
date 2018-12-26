@@ -264,7 +264,7 @@ const getColumns = (context) => [{
     {
         title: "项目名称",
         dataIndex: "projectName",
-        width:'100px',
+        // width:'100px',
     },
     {
         title: "项目编码",
