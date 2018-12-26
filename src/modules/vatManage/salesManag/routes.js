@@ -91,7 +91,7 @@ const SalesManag_Routes = [
         component:CheckOut,
         name:'退房处理台账',
         icon:{
-            url:`${ICON_URL_PATH}beginningNotTaxSalesEstate.svg`,
+            url:`${ICON_URL_PATH}checkOutAccount.svg`,
             backgroundColor:'#7ED530'
         },
         authorityInfo:salesManag['checkOutAccount'].options,

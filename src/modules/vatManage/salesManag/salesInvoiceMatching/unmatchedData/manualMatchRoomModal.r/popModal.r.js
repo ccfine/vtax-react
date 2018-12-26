@@ -19,27 +19,31 @@ class PopModal extends Component{
                     ...params,
                     returned: values.returned
                 }
-                request.post('/output/invoice/marry/manual/determine',param).then(({data}) => {
+                request.get('/output/invoice/marry/manual/determine',{
+                    params: param
+                }).then(({data}) => {
+                    this.props.togglesPopModalVisible(false)
                     if (data.code === 200) {
-                        message.success('修改成功')
+                        message.success('操作成功!');
+                        this.props.toggleModalVisible(false);
+                        this.props.refreshTable();
                     } else {
-                        message.error(data.msg)
+                        message.error(`操作失败:${data.msg}`)
                     }
-                    this.props.toggleModalVisible(false)
                 }).catch(err => {
                     message.error(err.message)
-                    this.props.toggleModalVisible(false)
+                    this.props.togglesPopModalVisible(false)
                 })
             }
         });
     }
     render(){
-        const { title,visible,toggleModalVisible } = this.props;
+        const { title,visible,togglesPopModalVisible } = this.props;
         return(
             <Modal
                 maskClosable={false}
                 destroyOnClose={true}
-                onCancel={()=>toggleModalVisible(false)}
+                onCancel={()=>togglesPopModalVisible(false)}
                 width={500}
                 style={{ top: 250 ,maxWidth:'80%'}}
                 visible={visible}
@@ -47,7 +51,7 @@ class PopModal extends Component{
                     <Row>
                         <Col span={12}></Col>
                         <Col span={12}>
-                            <Button onClick={()=>toggleModalVisible(false)}>取消</Button>
+                            <Button onClick={()=>togglesPopModalVisible(false)}>取消</Button>
                             <Button type="primary" onClick={this.handleSubmit}>确定</Button>
                         </Col>
                     </Row>

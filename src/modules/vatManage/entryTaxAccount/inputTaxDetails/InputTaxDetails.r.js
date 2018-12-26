@@ -167,10 +167,11 @@ const getColumns = (context, isEdit) => {
                     }} style={pointerStyle}>
                         {text}
                     </span>);
-                } else if (record.voucherType === '增值税专用发票') {
+                } else if (record.voucherType === '增值税专用发票' || record.voucherType === '通行费增值税电子普通发票') {
                     return (<span title="查看发票信息详情" onClick={() => {
                         context.setState({
-                            currentProfitId: record.profitCenterId
+                            currentProfitId: record.profitCenterId,
+                            invoiceType: record.voucherType === '增值税专用发票' ? 's' : record.voucherType === '通行费增值税电子普通发票' ? 'ct' : ''
                         }, () => {
                             context.toggleModal({visible: true});
                         });
@@ -510,6 +511,7 @@ class InputTaxDetails extends Component {
         params: {},
         saveLoading: false,
         currentProfitId: '',
+        invoiceType: '',
         popModalEdit: false,
         editFilters: {}
     };
@@ -723,7 +725,8 @@ class InputTaxDetails extends Component {
                         columns: invoiceColumns_1,
                         url: `/income/invoice/collection/detailList?${parseJsonToParams({
                             ...filters,
-                            profitCenterId: this.state.currentProfitId
+                            profitCenterId: this.state.currentProfitId,
+                            invoiceType: this.state.invoiceType
                         })}`,
                         scroll: {x: '1800px', y: '250px'}
                     }}

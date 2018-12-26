@@ -402,11 +402,12 @@ class ManualMatchRoomModal extends Component{
                     }}
                 >
                 </SearchTable>
-                <PopModal 
+                <PopModal
+                    {...this.props}
                     visible={popModalVisible}
                     title='红冲类型'
                     params={params}
-                    toggleModalVisible={this.togglesPopModalVisible}
+                    togglesPopModalVisible={this.togglesPopModalVisible}
                 />
             </Modal>
         )
