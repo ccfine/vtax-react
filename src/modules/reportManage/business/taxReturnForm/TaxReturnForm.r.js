@@ -4,7 +4,7 @@
 import React,{Component} from 'react'
 import 'react-datasheet/lib/react-datasheet.css';
 import './sheet.css'
-import { Tabs } from 'antd';
+import { Tabs,message } from 'antd';
 import sheet_0 from './sheetData/sheet0'
 import sheet_1 from './sheetData/sheet1'
 import sheet_2 from './sheetData/sheet2'
@@ -20,6 +20,7 @@ import {sheet_8,composeGrid_8} from './sheetData/sheet8'
 import sheet_10 from './sheetData/sheet10'
 import SheetWithSearchFields from './SheetWithSearchFields.r'
 import TaxCalculation from './taxCalculation'
+import {request} from 'utils'
 const TabPane = Tabs.TabPane;
 
 const sheetData = [
@@ -89,18 +90,35 @@ const sheetData = [
 class TaxReturnForm extends Component{
     state={
         activeKey:'0',
-        params:{}
+        params:{},
+        isProjectNum: false, // 增值税预缴税款表  是否显示 项目下拉框
     }
     onChange = activeKey =>{
-        this.setState({activeKey})
+        this.setState({
+            activeKey,
+            isProjectNum: false
+        })
     }
     onParamsChange = values=>{
         this.setState({
             params:values
         })
     }
+    fetchTaxSubjectConfig = (mainId) => {
+        if (mainId === undefined) return;
+        request.get(`/taxsubject/get/taxSubjectConfig/${mainId}`)
+            .then(({data}) => {
+                if(data.code===200){
+                    const result = data.data;
+                    this.setState({isProjectNum: result.projectSum === '1'})
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
+    }
     render () {
-        const {activeKey,params} = this.state,
+        const {activeKey,params,isProjectNum} = this.state,
             {declare} = this.props;
         return (
             <Tabs tabBarStyle={{marginBottom:0,backgroundColor:'#FFF'}} onChange={this.onChange} activeKey={activeKey}  type={'line'}>
@@ -110,7 +128,7 @@ class TaxReturnForm extends Component{
                             {
                                 parseInt(activeKey,0) === i ? (
                                 item.Component?<item.Component onParamsChange={this.onParamsChange} defaultParams={params}  declare={declare} title="法人公司纳税申报表"/>:
-                                <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} declare={declare}/>
+                                <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} declare={declare} tabIndex={i} isProjectNum={isProjectNum} fetchTaxSubjectConfig={this.fetchTaxSubjectConfig} />
                                 )
                                  : ''
                             }

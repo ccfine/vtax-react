@@ -20,6 +20,75 @@ const openNotificationWithIcon = (type,msg) => {
     });
   };
 
+const searchFields = (context,disabled,declare,defaultParams={},tabIndex,isProjectNum)=> (getFieldValue) => {
+    const arr = [
+        {
+            label:'纳税主体',
+            fieldName:'main',
+            type:'taxMain',
+            span:8,
+            componentProps:{
+                labelInValue:true,
+                disabled,
+                onSelect: (value) => {
+                    if (context.props.tabIndex === 6) {
+                        context.props.fetchTaxSubjectConfig(value.key)
+                    }
+                }
+            },
+            fieldDecoratorOptions:{
+                initialValue: (disabled && declare.mainId) ? {key:declare.mainId,label:declare.mainName} : JSON.stringify(defaultParams) !== "{}" ? (defaultParams && {key:defaultParams.mainId,label:''}) : undefined ,
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择纳税主体'
+                    }
+                ]
+            },
+        },
+        {
+            label:'月份',
+            fieldName:'taxMonth',
+            span:8,
+            type:'monthPicker',
+            componentProps:{
+                disabled,
+            },
+            fieldDecoratorOptions:{
+
+                initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || (defaultParams.taxMonth && moment(defaultParams.taxMonth)),
+                rules:[
+                    {
+                        required:true,
+                        message:'请选择月份'
+                    }
+                ]
+            }
+        },
+    ]
+    if (isProjectNum && tabIndex === 6) {
+        arr.push({
+            label:'项目',
+            fieldName:'projectNum',
+            span:8,
+            type:'asyncSelect',
+            componentProps:{
+                disabled: false,
+                fieldTextName:'itemName',
+                fieldValueName:'itemNum',
+                // doNotFetchDidMount: !declare,
+                fetchAble:getFieldValue('main') || getFieldValue('main') || false,
+                url: `/project/list/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
+            },
+            fieldDecoratorOptions:{
+                initialValue: !!declare ? '' : JSON.stringify(defaultParams) !== "{}" ? (!!defaultParams.projectNum ? defaultParams.projectNum : '') : '',
+
+            }
+        })
+    }
+    return arr;
+}
+
 class SheetWithSearchFields extends Component{
     static propTypes={
         tab:PropTypes.string,
@@ -30,46 +99,6 @@ class SheetWithSearchFields extends Component{
     }
     static defaultProps = {
         grid:[],
-        searchFields:(disabled,declare,defaultParams={})=>[
-            {
-                label:'纳税主体',
-                fieldName:'main',
-                type:'taxMain',
-                span:8,
-                componentProps:{
-                    labelInValue:true,
-                    disabled,
-                },
-                fieldDecoratorOptions:{
-                    initialValue: (disabled && declare.mainId) ? {key:declare.mainId,label:declare.mainName} : JSON.stringify(defaultParams) !== "{}" ? (defaultParams && {key:defaultParams.mainId,label:''}) : undefined ,
-                    rules:[
-                        {
-                            required:true,
-                            message:'请选择纳税主体'
-                        }
-                    ]
-                },
-            },
-            {
-                label:'月份',
-                fieldName:'taxMonth',
-                span:8,
-                type:'monthPicker',
-                componentProps:{
-                    disabled,
-                },
-                fieldDecoratorOptions:{
-
-                    initialValue: (disabled && moment(declare.authMonth, 'YYYY-MM')) || (defaultParams.taxMonth && moment(defaultParams.taxMonth)),
-                    rules:[
-                        {
-                            required:true,
-                            message:'请选择月份'
-                        }
-                    ]
-                }
-            },
-        ]
     }
     state={
         params:{},
@@ -79,7 +108,7 @@ class SheetWithSearchFields extends Component{
          * */
         statusParam:'',
         saveLoding:false,
-        popModalVisible:false
+        popModalVisible:false,
     }
     refreshTable = ()=>{
         this.mounted && this.setState({
@@ -97,6 +126,10 @@ class SheetWithSearchFields extends Component{
     }
     componentDidMount(){
         const { declare, defaultParams } = this.props;
+    
+        if (this.props.tabIndex === 6) {
+            this.props.fetchTaxSubjectConfig(!!declare ? declare.mainId : defaultParams.mainId)``
+        }
         if (!!declare) {
             this.mounted && this.setState({
                 params:{
@@ -202,7 +235,7 @@ class SheetWithSearchFields extends Component{
         });
     };
     render(){
-        const { tab, grid, url , searchFields, form, composeGrid,scroll,defaultParams,declare,action,saveUrl,taxEdit} = this.props;
+        const { tab, grid, url, form, composeGrid,scroll,defaultParams,declare,action,saveUrl,taxEdit,tabIndex,isProjectNum} = this.props;
         let disabled = !!declare;
         const { params,updateKey,statusParam,saveLoding,popModalVisible } = this.state;
         const readOnly = !(disabled && declare.decAction==='edit') || parseInt(statusParam.status,10)===2;
@@ -216,7 +249,7 @@ class SheetWithSearchFields extends Component{
                 }}>
                         <Row>
                             {
-                                getFields(form, searchFields(disabled,declare,defaultParams))
+                                getFields(form, searchFields(this,disabled,declare,defaultParams,tabIndex,isProjectNum))
                             }
                             <Col style={{width:'100%',textAlign:'right'}}>
                                 <Button size='small' style={{marginTop:5,marginLeft:20}} type="primary" htmlType="submit">查询</Button>

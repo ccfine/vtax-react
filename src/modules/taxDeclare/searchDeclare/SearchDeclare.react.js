@@ -4,7 +4,7 @@
  * description  :
  */
 import React, { Component } from 'react';
-import {message,Modal,Tooltip} from 'antd'
+import {message,Modal} from 'antd'
 import {SearchTable} from 'compoments';
 import ApplyDeclarationPopModal from '../createADeclare/applyDeclarationPopModal'
 import {request,composeBotton} from 'utils'
@@ -133,21 +133,7 @@ const getColumns =(context)=>[
         fixed: "left",
         width: "100px",
         dataIndex: "action"
-    },{
-        title: '纳税申报系统申报进度',
-        dataIndex: 'status',
-        className:'text-center',
-        width: "200px",
-        render:text=>{
-            status.map(o=>{
-                if( parseInt(o.value, 0) === parseInt(text, 0)){
-                    text = o.text
-                }
-                return '';
-            })
-            return text;
-        },
-    }, {
+    }, /*{
         title: '税局审批结果',
         dataIndex: 'approvalStatusInfo',
         //width: "200px",
@@ -160,20 +146,7 @@ const getColumns =(context)=>[
                         <div className="ellipsis-index-lineClamp">{obj}</div>
                     </Tooltip>
         }
-    },{
-        title: '扣款状态',
-        dataIndex: 'deductionStatus',
-        width: "100px",
-        render:text=>{
-            deductionStatus.map(o=>{
-                if( parseInt(o.value, 0) === parseInt(text, 0)){
-                    text = o.text
-                }
-                return '';
-            })
-            return text;
-        },
-    },{
+    },*/{
         title: '纳税主体',
         dataIndex: 'mainName',
         width: "200px",
@@ -188,6 +161,38 @@ const getColumns =(context)=>[
     },{
         title: '申报日期',
         dataIndex: 'declarationDate',
+        width: "100px",
+    },{
+        title: '纳税申报系统申报进度',
+        dataIndex: 'status',
+        className:'text-center',
+        width: "200px",
+        render:text=>{
+            status.map(o=>{
+                if( parseInt(o.value, 0) === parseInt(text, 0)){
+                    text = o.text
+                }
+                return '';
+            })
+            return text;
+        },
+    },{
+        title: '扣款状态',
+        dataIndex: 'deductionStatus',
+        width: "100px",
+        render:text=>{
+            deductionStatus.map(o=>{
+                if( parseInt(o.value, 0) === parseInt(text, 0)){
+                    text = o.text
+                }
+                return '';
+            })
+            return text;
+        },
+    },{
+        title: '扣款金额',
+        dataIndex: 'taxAmount',
+        className: "table-money",
         width: "100px",
     }
 ];

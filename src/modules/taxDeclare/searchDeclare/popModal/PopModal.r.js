@@ -21,51 +21,12 @@ const columns = [
         }
     }, {
         title: '税局审批结果',
-        dataIndex: 'approvalStatus',
+        dataIndex: 'approvalStatusInfo',
         width: '100px',
-        render: text => {
-            if (text === '-2') {
-                return '未发起审批';
-            }
-            if (text === '-1') {
-                return '审批失败';
-            }
-            if (text === '0') {
-                return '审批中';
-            }
-            if (text === '1') {
-                return '审批成功';
-            }
-            if (text === '2') {
-                return '已申报';
-            }
-            return text;
-        }
     }, {
         title: '扣款状态',
-        dataIndex: 'deductionStatus',
+        dataIndex: 'deductionStatusInfo',
         width: '100px',
-        render: text => {
-            if (text === '-2') {
-                return '未发起扣款';
-            }
-            if (text === '-1') {
-                return '扣款失败';
-            }
-            if (text === '0') {
-                return '未扣款';
-            }
-            if (text === '1') {
-                return '扣款中';
-            }
-            if (text === '2') {
-                return '扣款成功';
-            }
-            if (text === '3') {
-                return '无需扣款';
-            }
-            return text;
-        }
     }, {
         title: '扣款金额',
         dataIndex: 'taxAmount',
