@@ -21,6 +21,10 @@ const table_1_columns = [{
     title: '项目代码',
     dataIndex: 'itemNum',
     width:'350px',
+}, {
+    title: '项目地址',
+    dataIndex: 'proadrs',
+    width:'350px',
 }];
 const table_2_columns = (context, getFieldDecorator) =>[{
     title: '项目分期名称',

@@ -129,6 +129,28 @@ export default class ParameterSettings extends Component{
                                  },*/
                             },
                             {
+
+                                label: '按项目预缴税款',
+                                fieldName: 'taxSubjectConfigBO.projectSum',
+                                type: 'checkbox',
+                                span: 6,
+                                formItemStyle:{
+                                    labelCol:{
+                                        span:20
+                                    },
+                                    wrapperCol:{
+                                        span:4
+                                    }
+                                },
+                                fieldDecoratorOptions: {
+                                    initialValue: defaultData!==null && parseInt(defaultData.projectSum,0) === 1,
+                                    valuePropName: 'checked',
+                                },
+                                componentProps: {
+                                    disabled,
+                                },
+                            },
+                            {
                                 label:'确收时点',
                                 fieldName:'taxSubjectConfigBO.confirmType',
                                 type:'radioGroup',
