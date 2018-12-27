@@ -177,7 +177,7 @@ const getColumns = context => [
     {
         title: "项目分期名称",
         dataIndex: "stageName",
-        width:'200px',
+        // width:'200px',
     },
     {
         title: "不动产名称",
@@ -187,12 +187,12 @@ const getColumns = context => [
     {
         title: "不动产编号",
         dataIndex: "assetNo",
-        width:'100px',
+        width:'150px',
     },
     {
         title: "转固单号",
         dataIndex: "rotaryNum",
-        width:'100px',
+        width:'150px',
     },
     {
         title: "入账日期",
@@ -202,7 +202,7 @@ const getColumns = context => [
     {
         title: "取得方式",
         dataIndex: "acquisitionMode",
-        width:'100px',
+        width:'150px',
         render: (text) => {
             // 0-外部获取
             // 2-自建转自用
@@ -230,12 +230,12 @@ const getColumns = context => [
     {
         title: "资产类别",
         dataIndex: "assetType",
-        width:'200px',
+        width:'250px',
     },
     {
         title: "资产状态",
         dataIndex: "assetsState",
-        width:'100px',
+        width:'150px',
     },
     {
         title: "处置日期",
@@ -307,7 +307,7 @@ export default class fixedAssetCard extends Component {
                     onSuccess:(filters)=>{
                         this.setState({filters})
                     },
-                    scroll:{ x: 2370,y:window.screen.availHeight-360,},
+                    scroll:{ x: 2200,y:window.screen.availHeight-360,},
                     extra: (
                         <span>
                             {/*
