@@ -42,7 +42,7 @@ const searchFields = [
             }
         ],
     },{
-        label:'所属期',
+        label:'纳税申报期',
         type:'monthPicker',
         fieldName:'partTerm',
         formItemStyle,
@@ -71,70 +71,37 @@ const getColumns =(context)=>[
         render:(text,record)=>{ //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
             let t = undefined;
             let status = parseInt(record.status,0);
-            switch (status){
-                case 1: //申报办理
-                    t = composeBotton([{
-                                type:'action',
-                                icon:'form',
-                                title:'申报办理',
-                                userPermissions:['1085004'],
-                                onSuccess:()=>{
-                                    context.props.history.push(`/web/taxDeclare/declareHandle/handleDeclare/${record.id}`)
-                                    /*context.setState({
-                                        record: {...record,decAction:'edit'},
-                                    },() => {
-                                        context.toggleApplyVisible(true,'tax/decConduct/list/handle');
-                                    });*/
-                                }
-                            }/*,{
-                                type:'action',
-                                icon:'exception',
-                                title:'流程终止',
-                                userPermissions:['1085000'],
-                                onSuccess:()=>{ context.handelProcessStop(record) }
-                            }*/])
-                    break
-                case 2: //申报审核
-                    break
-                case 3: //申报审批
-                    break
-                case 4: //申报完成
-                    t = composeBotton([{
-                            type: 'action',
-                            icon: 'folder',
-                            title: '申报归档',
-                            userPermissions: ['1085001'],
-                            onSuccess: () => {
-                                context.handelArchiving(record)
-                            }
-                        },{
-                            type:'action',
-                            icon:'rollback',
-                            title:'申报撤回',
-                            userPermissions:['1085005'],
-                            onSuccess:()=>{
-                                context.props.history.push(`/web/taxDeclare/declareHandle/revokeDeclare/${record.id}`)
-                                // context.setState({
-                                //     record: {...record,decAction:'edit'},
-                                // },() => {
-                                //     context.toggleApplyVisible(true,'tax/decConduct/list/revoke');
-                                // });
-                            }
-                        }])
-                    break
-                case 5: //归档
-                    t = composeBotton([{
-                            type:'action',
-                            icon:'folder',
-                            title:'申报归档',
-                            userPermissions:['1085001'],
-                            onSuccess:()=>{ context.handelArchiving(record) }
-                        }])
-                    break
-                case -1: //流程终止
-                    break
-                default:
-                    /*break*/
+            if(status === 1){ //申报办理
+                t = composeBotton([{
+                    type:'action',
+                    icon:'form',
+                    title:'申报办理',
+                    userPermissions:['1085004'],
+                    onSuccess:()=>{
+                        context.props.history.push(`/web/taxDeclare/declareHandle/handleDeclare/${record.id}`)
+                        /*context.setState({
+                            record: {...record,decAction:'edit'},
+                        },() => {
+                            context.toggleApplyVisible(true,'tax/decConduct/list/handle');
+                        });*/
+                    }
+                }])
+            }
+            if((status === 4 && record.approvalStatus === '') || (status === 4 && parseInt(record.approvalStatus,0)===-1)){
+                t = composeBotton([{
+                        type:'action',
+                        icon:'rollback',
+                        title:'申报撤回',
+                        userPermissions:['1085005'],
+                        onSuccess:()=>{
+                            context.props.history.push(`/web/taxDeclare/declareHandle/revokeDeclare/${record.id}`)
+                            // context.setState({
+                            //     record: {...record,decAction:'edit'},
+                            // },() => {
+                            //     context.toggleApplyVisible(true,'tax/decConduct/list/revoke');
+                            // });
+                        }
+                    }])
             }
             return <span>
                         {
@@ -202,7 +169,7 @@ const getColumns =(context)=>[
         title: '纳税主体',
         dataIndex: 'mainName',
     },{
-        title: '所属期',
+        title: '纳税申报期',
         dataIndex: 'partTerm',
     },/*{
         title: '税（费）种',
@@ -255,36 +222,6 @@ class DeclareHandle extends Component{
             applyUrl:url,
         });
     };
-    handelArchiving=(record)=>{
-        const modalRef = Modal.confirm({
-            title: '友情提醒',
-            content: '是否确定要归档？',
-            okText: '确定',
-            okType: 'danger',
-            cancelText: '取消',
-            onOk:()=>{
-                modalRef && modalRef.destroy();
-                request.put(`/tax/decConduct/record/${record.id}`,{
-                    mainId: record.mainId,
-                    authMonth:record.month
-                })
-                    .then(({data})=>{
-                        if (data.code === 200) {
-                            message.success('流程归档成功!');
-                            this.refreshTable();
-                        } else {
-                            message.error(data.msg)
-                        }
-                    })
-                    .catch(err => {
-                        message.error(err.message)
-                    })
-            },
-            onCancel() {
-                modalRef.destroy()
-            },
-        });
-    }
     handelProcessStop=(record)=>{
         const modalRef = Modal.confirm({
             title: '友情提醒',

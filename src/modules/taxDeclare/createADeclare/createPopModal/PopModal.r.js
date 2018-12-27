@@ -322,7 +322,7 @@ class PopModal extends Component{
                                             ],
                                         }
                                     },{
-                                        label:'所属期',
+                                        label:'纳税申报期',
                                         fieldName:'partTerm',
                                         type:'monthPicker',  //月份 monthRangePicker
                                         span:12,
@@ -337,7 +337,7 @@ class PopModal extends Component{
                                             rules: [
                                                 {
                                                     required:true,
-                                                    message:'请选择所属期'
+                                                    message:'请选择纳税申报期'
                                                 }
                                             ],
                                         }

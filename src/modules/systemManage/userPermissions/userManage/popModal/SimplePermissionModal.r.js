@@ -95,10 +95,10 @@ const treeData = [{
         children: [{
             title: '查询',
             key  : '020200',
-        }/*,{
+        },{
             title: '管理',
             key  : '020201',
-        }*/]
+        }]
     }]
 },{
     title   : '报表管理',

@@ -29,7 +29,7 @@ const searchFields =(context) => [
         formItemStyle,
         span:8,
     },{
-        label:'所属期',
+        label:'纳税申报期',
         type:'monthPicker',
         fieldName:'partTerm',
         formItemStyle,
@@ -141,7 +141,7 @@ const getColumns =(context)=>[
         title: '组织架构',
         dataIndex: 'orgName',
     },{
-        title: '所属期',
+        title: '纳税申报期',
         dataIndex: 'partTerm',
     }/*,{
         title: '税（费）种',
