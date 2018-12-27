@@ -318,7 +318,7 @@ const invoiceColumns_1 = [
     {
         title: '数据来源',
         dataIndex: 'sourceType',
-        width: '5%',
+        width: '100px',
         render: text => {
             text = parseInt(text, 0);
             if (text === 1) {
@@ -332,11 +332,11 @@ const invoiceColumns_1 = [
     }, {
         title: '纳税主体',
         dataIndex: 'mainName',
-        width: '15%'
+        // width: '100px'
     }, {
         title: '发票类型',
         dataIndex: 'invoiceType',
-        width: '5%',
+        width: '100px',
         render: text => {
             if (text === 's') {
                 return '专票';
@@ -344,54 +344,57 @@ const invoiceColumns_1 = [
             if (text === 'c') {
                 return '普票';
             }
+            if (text === 'ct') {
+                return '通行费增值税电子普通发票'
+            }
             return text;
         }
     }, {
         title: '发票代码',
         dataIndex: 'invoiceCode',
-        width: '5%'
+        width: '100px'
     }, {
         title: '发票号码',
         dataIndex: 'invoiceNum',
-        width: '10%'
+        width: '100px'
     }, {
         title: '开票日期',
         dataIndex: 'billingDate',
-        width: '5%'
+        width: '100px'
     }, {
         title: '认证月份',
         dataIndex: 'authMonth',
-        width: '5%'
+        width: '100px'
     }, {
         title: '认证时间',
         dataIndex: 'authDate',
-        width: '5%'
+        width: '100px'
     }, {
         title: '销售单位名称',
         dataIndex: 'sellerName',
-        width: '15%'
+        width: '200px'
     }, {
         title: '纳税人识别号',
         dataIndex: 'sellerTaxNum',
-        width: '10%'
+        width: '100px'
     }, {
         title: '金额',
         dataIndex: 'amount',
         className: "table-money",
-        width: '5%',
+        width: '100px',
         render: text => fMoney(text)
     }, {
         title: '税额',
         dataIndex: 'taxAmount',
         className: "table-money",
-        width: '8%',
+        width: '100px',
         render: text => fMoney(text)
 
     }, {
         title: '价税合计',
         dataIndex: 'totalAmount',
         className: "table-money",
-        width: '8%',
+        width: '100px',
         render: text => fMoney(text)
     }
 ];
@@ -728,7 +731,7 @@ class InputTaxDetails extends Component {
                             profitCenterId: this.state.currentProfitId,
                             invoiceType: this.state.invoiceType
                         })}`,
-                        scroll: {x: '1800px', y: '250px'}
+                        scroll: {x: 1500, y: 250}
                     }}
                     showTotal="true"
                 />

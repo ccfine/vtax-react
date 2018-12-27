@@ -128,7 +128,7 @@ class SheetWithSearchFields extends Component{
         const { declare, defaultParams } = this.props;
     
         if (this.props.tabIndex === 6) {
-            this.props.fetchTaxSubjectConfig(!!declare ? declare.mainId : defaultParams.mainId)``
+            this.props.fetchTaxSubjectConfig(!!declare ? declare.mainId : defaultParams.mainId)
         }
         if (!!declare) {
             this.mounted && this.setState({
