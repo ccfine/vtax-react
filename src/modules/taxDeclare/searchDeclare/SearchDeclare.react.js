@@ -44,6 +44,13 @@ const deductionStatus= [
     {value: '2', text: '扣款成功'},
     {value: '3', text: '无需扣款'},
 ]
+//扣款状态 查询字段
+const deductionStatusSearch= [
+    {value: '-1', text: '扣款失败'},
+    {value: '0', text: '未扣款'},
+    {value: '1', text: '扣款中'},
+    {value: '2', text: '扣款成功'},
+]
 const searchFields = [
     {
         label:'纳税主体',
@@ -60,12 +67,20 @@ const searchFields = [
         span:8,
     },
     {
-        label:'纳税申报系统进度',
+        label:'申报状态',
         type:'select',
         fieldName:'approvalStatus',
         formItemStyle,
         span:8,
         options:approvalStatus
+    },
+    {
+        label:'扣款状态',
+        type:'select',
+        fieldName:'deductionStatus',
+        formItemStyle,
+        span:8,
+        options:deductionStatusSearch
     },
 ]
 const getColumns =(context)=>[
@@ -149,24 +164,19 @@ const getColumns =(context)=>[
     },*/{
         title: '纳税主体',
         dataIndex: 'mainName',
-        width: "200px",
     },{
         title: '纳税申报期',
         dataIndex: 'month',
-        width: "100px",
     },{
         title: '申报人',
         dataIndex: 'declareBy',
-        width: "100px",
     },{
         title: '申报日期',
         dataIndex: 'declarationDate',
-        width: "100px",
     },{
-        title: '纳税申报系统申报进度',
+        title: '申报状态',
         dataIndex: 'status',
         className:'text-center',
-        width: "200px",
         render:text=>{
             status.map(o=>{
                 if( parseInt(o.value, 0) === parseInt(text, 0)){
@@ -179,7 +189,6 @@ const getColumns =(context)=>[
     },{
         title: '扣款状态',
         dataIndex: 'deductionStatus',
-        width: "100px",
         render:text=>{
             deductionStatus.map(o=>{
                 if( parseInt(o.value, 0) === parseInt(text, 0)){
@@ -193,7 +202,6 @@ const getColumns =(context)=>[
         title: '扣款金额',
         dataIndex: 'taxAmount',
         className: "table-money",
-        width: "100px",
     }
 ];
 
@@ -269,7 +277,7 @@ class SearchDeclare extends Component{
                     },
                     url:'/tax/decConduct/query/list',
                     scroll:{
-                        x:1550
+                        x:1300
                     }
                 }}
             >
