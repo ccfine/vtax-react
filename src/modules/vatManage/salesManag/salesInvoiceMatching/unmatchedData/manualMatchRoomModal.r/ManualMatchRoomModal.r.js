@@ -104,7 +104,7 @@ const searchFields = (context,selectedData) => (getFieldValue)=> {
                 }
             ],
             fieldDecoratorOptions: {
-                initialValue: context.isPositive() ? '0' : ''
+                initialValue: '0', //context.isPositive() ? '0' : ''
             },
             componentProps: {
                 disabled: context.isPositive() ? true : false,
