@@ -13,11 +13,11 @@ import {fMoney,composeBotton,requestResultStatus} from 'utils'
 const columns = context =>[{
         title: '利润中心',
         dataIndex: 'profitCenterName',
-        width:'200px',
+        width:'300px',
     },{
         title:'项目分期名称',
         dataIndex:'stagesName',
-        width:'200px',
+        width:'300px',
     },{
         title:'不动产编码',
         dataIndex:'assetNo',
@@ -25,29 +25,29 @@ const columns = context =>[{
     },{
         title:'不动产名称',
         dataIndex:'assetName',
-        width:'200px',
+        // width:'200px',
     },{
         title: "期初待抵扣进项税额",
         dataIndex: "initialTaxAmount",
-        width:'100px',
+        width:'200px',
         render:(text)=>fMoney(text),
         className: "table-money",
     },{
         title: "当期抵扣进项税额",
         dataIndex: "taxAmount",
-        width:'150px',
+        width:'200px',
         render:(text)=>fMoney(text),
         className: "table-money",
     },{
         title: "期末待抵扣进项税额",
         dataIndex: "deductedTaxAmount",
-        width:'100px',
+        width:'200px',
         render:(text)=>fMoney(text),
         className: "table-money",
     },{
         title: "待抵扣期间",
         dataIndex: "deductedPeriod",
-        width:'100px',
+        width:'200px',
     },
 ];
 
@@ -155,7 +155,7 @@ export default class SelfBuiltToSelfUse extends Component{
                             })
                         },
                         scroll:{
-                            x:1250,
+                            x:1800,
                             y:window.screen.availHeight-430,
                         },
                     }}

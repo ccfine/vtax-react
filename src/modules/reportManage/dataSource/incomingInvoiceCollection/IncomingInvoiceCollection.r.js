@@ -264,7 +264,7 @@ const columns = [
     },{
         title: '备注',
         dataIndex: 'remark',
-        width:'100px',
+        // width:'100px',
     }
 ];
 export default class IncomingInvoiceCollection extends Component{

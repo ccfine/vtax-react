@@ -104,13 +104,13 @@ const getColumns = (context, getFieldDecorator, disabled) => {
     }, {
         title: '减税性质名称',
         dataIndex: 'reduceName',
-        width: '300px'
+        // width: '300px'
     }, {
         title: '期初余额',
         dataIndex: 'initialBalance',
         render: text => fMoney(text),
         className: 'table-money',
-        width: '100px'
+        width: '200px'
     }, {
         title: '本期发生额',
         children: [
@@ -133,7 +133,7 @@ const getColumns = (context, getFieldDecorator, disabled) => {
                         return record.amount ? fMoney(parseFloat(text)) : text;
                     }
                 },
-                width: '150px'
+                width: '200px'
             },
             {
                 title: '税额',
@@ -154,7 +154,7 @@ const getColumns = (context, getFieldDecorator, disabled) => {
                         return record.taxAmount ? fMoney(parseFloat(text)) : text;
                     }
                 },
-                width: '150px'
+                width: '200px'
             },
             {
                 title: '减免税金额',
@@ -175,7 +175,7 @@ const getColumns = (context, getFieldDecorator, disabled) => {
                         return record.reduceTaxAmount ? fMoney(parseFloat(text)) : text;
                     }
                 },
-                width: '150px'
+                width: '200px'
             }
         ]
     }, {
@@ -213,13 +213,13 @@ const getColumns = (context, getFieldDecorator, disabled) => {
                 return txt;
             }
         },
-        width: '100px'
+        width: '200px'
     }, {
         title: '本期应抵减税额',
         dataIndex: 'currentDeductAmount',
         render: text => fMoney(text),
         className: 'table-money',
-        width: '100px'
+        width: '200px'
     }];
 };
 // 总计数据结构，用于传递至TableTotal中

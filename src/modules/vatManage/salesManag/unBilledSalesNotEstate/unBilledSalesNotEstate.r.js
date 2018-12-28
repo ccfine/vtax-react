@@ -324,7 +324,7 @@ const voucherColumnsConfirm = [
     {
         title: "项目分期",
         dataIndex: "stagesName",
-        width: 200
+        // width: 200
     },
     {
         title: "过账日期",
@@ -392,6 +392,8 @@ const voucherColumnsInvoice = [
                 value = '专票'
             }else if(text === 'c'){
                 value = '普票';
+            }else if(text === 'ct'){
+                value = '通行费增值税电子普通发票';
             }
             return value;
         }
@@ -785,7 +787,7 @@ class UnBilledSalesNotEstate extends Component {
                         },
                         columns: voucherColumnsConfirm,
                         url: `/account/invoiceSale/unrealty/detailList/?${parseJsonToParams(filters)}&subjectId=${subjectId}&taxRateId=${taxRateId}`,
-                        scroll: { x: "1700px", y: "250px" },
+                        scroll: { x: 1700, y: "250px" },
                         onSuccess: params => {
                             this.setState({
                                 voucherFilterConfirm: params

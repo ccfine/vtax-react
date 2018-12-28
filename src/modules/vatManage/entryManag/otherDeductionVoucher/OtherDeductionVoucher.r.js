@@ -171,41 +171,41 @@ const voucherSearchFields = [
 const voucherColumns = [{
     title: '利润中心',
     dataIndex: 'profitCenterName',
-    width: 200
+    width: '200px'
 }, {
     title: '项目分期',
     dataIndex: 'stagesNum',
-    width: 200
+    width: '200px'
 }, {
     title: '过账日期',
     dataIndex: 'excelBillingDate',
-    width:150,
+    width: '150px',
 }, {
     title: 'SAP凭证号',
     dataIndex: 'voucherNumSap',
-    width: 150
+    width: '150px'
 }, {
     title: '凭证摘要',
     dataIndex: 'voucherAbstract',
-    width: 100
+    width: '100px'
 }, {
     title: '借方科目名称',
     dataIndex: 'debitSubjectName',
-    width: 100
+    // width: 100
 }, {
     title: '借方科目代码',
     dataIndex: 'debitSubjectCode',
-    width: 100
+    width: '100px'
 }, {
     title: '借方金额',
     dataIndex: 'debitAmount',
-    width:100,
+    width: '100px',
     className: "table-money",
     render: text => fMoney(text)
 }, {
     title: '代扣代缴类型',
     dataIndex: 'withholdingType',
-    width: 100
+    width: '100px'
 }];
 
 
@@ -224,17 +224,20 @@ const invoiceColumns = [
     {
         title: '抵扣凭据类型',
         dataIndex: 'zesfdkxm',
-        width:'100px',
+        // width:'100px',
     }, {
         title: '发票类型',
         dataIndex: 'zefplx',
-        width: '80px',
+        width: '100px',
         render: text => {
             if (text === 's') {
                 return '专票';
             }
             if (text === 'c') {
                 return '普票';
+            }
+            if (text === 'ct') {
+                return '通行费增值税电子普通发票';
             }
             return text;
         }
@@ -268,20 +271,20 @@ const invoiceColumns = [
         title: '金额',
         dataIndex: 'zebhsje',
         className: "table-money",
-        width: '80px',
+        width: '100px',
         render: text => fMoney(text)
     }, {
         title: '税额',
         dataIndex: 'zese',
         className: "table-money",
-        width: '80px',
+        width: '100px',
         render: text => fMoney(text)
 
     }, {
         title: '含税金额',
         dataIndex: 'zehsje',
         className: "table-money",
-        width: '80px',
+        width: '100px',
         render: text => fMoney(text)
     }
 ];
@@ -428,7 +431,7 @@ export default class OtherDeductionVoucher extends Component {
                         tableOption={{
                             columns:invoiceColumns,
                             url: `/other/tax/deduction/vouchers/list/pools?${parseJsonToParams({...filters, ...voucherParams})}`,
-                            scroll:{ x: '200%', y: 200 },
+                            scroll:{ x: 1100, y: 200 },
                             onSuccess: params => {
                                 this.setState({
                                     exportParams: {...params}
@@ -455,7 +458,7 @@ export default class OtherDeductionVoucher extends Component {
                         tableOption={{
                             columns:voucherColumns,
                             url:`/other/tax/deduction/vouchers/list/voucher?${parseJsonToParams({...filters, ...voucherParams})}`,
-                            scroll:{ x: '200%',y:'200px' },
+                            scroll:{ x: 1300,y:'200px' },
                             onSuccess: params => {
                                 this.setState({
                                     exportParams: {...params}

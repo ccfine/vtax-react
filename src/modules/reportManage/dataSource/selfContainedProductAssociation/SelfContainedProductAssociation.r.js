@@ -129,7 +129,7 @@ const columns = [
   {
     title: "产品名称",
     dataIndex: "productName",
-    width: "200px"
+    // width: "200px"
   },
   {
     title: "产品编码",
@@ -203,6 +203,9 @@ const columns = [
           break
         case "c":
           t = "增值税普通发票"
+          break
+        case "ct":
+          t = "通行费增值税电子普通发票"
           break
         default:  
       }
@@ -357,7 +360,7 @@ export default class SelfContainedProductAssociation extends Component {
               })
             },
             scroll: {
-              x: 4400,
+              x: 4200,
               y: window.screen.availHeight - 400
             }
           }}

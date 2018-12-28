@@ -84,42 +84,42 @@ const columns = [
   {
     title: "利润中心",
     dataIndex: "profitCenterName",
-    width: "200px"
+    width: "12.5%"
   },
   {
     title: "项目分期名称",
     dataIndex: "stagesName",
-    width: "200px"
+    width: "12.5%"
   },
   {
     title: "转固单号",
     dataIndex: "rotaryNum",
-    width: "200px"
+    width: "12.5%"
   },
   {
     title: "产品名称",
     dataIndex: "productName",
-    width: "200px"
+    width: "12.5%"
   },
   {
     title: "产品编码",
     dataIndex: "productNum",
-    width: "200px"
+    width: "12.5%"
   },
   {
     title: "产品类型",
     dataIndex: "productType",
-    width: "200px"
+    width: "12.5%"
   },
   {
     title: "建筑面积",
     dataIndex: "coveredArea",
-    width: "200px"
+    width: "12.5%"
   },
   {
     title: "最新更新时间",
     dataIndex: "lastModifiedDate",
-    width: "200px"
+    width: "12.5%"
   }
 ]
 

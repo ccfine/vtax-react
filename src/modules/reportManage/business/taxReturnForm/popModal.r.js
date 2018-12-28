@@ -53,6 +53,9 @@ class PopModal extends Component{
                         beforeTaxesConstruction: res.beforeTaxesConstruction,
                         beforeOnSalesPayment: res.beforeOnSalesPayment,
                         beforeTaxesRealEstateRental: res.beforeTaxesRealEstateRental,
+                        afterTaxesConstruction: res.afterTaxesConstruction,
+                        afterOnSalesPayment: res.afterOnSalesPayment,
+                        afterTaxesRealEstateRental: res.afterTaxesRealEstateRental,
                         totalAmount:res.totalAmount,
                         res
                     })
@@ -129,7 +132,8 @@ class PopModal extends Component{
     render(){
         const { title,visible,toggleModalVisible } = this.props;
         const { getFieldDecorator } = this.props.form;
-        const {buildingServicesTaxAmount,onSalesEstateTaxAmount,leaseholdTaxAmount,beforeTaxesConstruction,beforeOnSalesPayment,beforeTaxesRealEstateRental,totalAmount,loading,btnLoading} = this.state;
+        const {buildingServicesTaxAmount,onSalesEstateTaxAmount,leaseholdTaxAmount,beforeTaxesConstruction,beforeOnSalesPayment,beforeTaxesRealEstateRental,
+            afterTaxesConstruction, afterOnSalesPayment, afterTaxesRealEstateRental,totalAmount,loading,btnLoading} = this.state;
         return(
             <Modal
                 maskClosable={false}
@@ -168,7 +172,7 @@ class PopModal extends Component{
                                     <td>
                                         <NumericInputCell
                                             fieldName={`afterTaxesConstruction`}
-                                            initialValue={'0.00'}
+                                            initialValue={afterTaxesConstruction || '0.00'}
                                             getFieldDecorator={getFieldDecorator}
                                             componentProps={{
                                                 onFocus: (e) => this.handleFocus(e, `afterTaxesConstruction`),
@@ -184,7 +188,7 @@ class PopModal extends Component{
                                     <td>
                                         <NumericInputCell
                                             fieldName={`afterOnSalesPayment`}
-                                            initialValue={'0.00'}
+                                            initialValue={afterOnSalesPayment || '0.00'}
                                             getFieldDecorator={getFieldDecorator}
                                             componentProps={{
                                                 onFocus: (e) => this.handleFocus(e, `afterOnSalesPayment`),
@@ -201,7 +205,7 @@ class PopModal extends Component{
                                     <td>
                                         <NumericInputCell
                                             fieldName={`afterTaxesRealEstateRental`}
-                                            initialValue={'0.00'}
+                                            initialValue={afterTaxesRealEstateRental || '0.00'}
                                             getFieldDecorator={getFieldDecorator}
                                             componentProps={{
                                                 onFocus: (e) => this.handleFocus(e, `afterTaxesRealEstateRental`),

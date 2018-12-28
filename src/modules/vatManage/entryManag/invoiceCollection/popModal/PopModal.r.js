@@ -414,7 +414,8 @@ class PopModal extends Component{
                                             formItemStyle,
                                             options:[
                                                 {value:'s',text:'增值税专用发票'},
-                                                {value:'c',text:'增值税普通发票'}
+                                                {value:'c',text:'增值税普通发票'},
+                                                {value:'ct',text:'通行费增值税电子普通发票'}
                                             ],
                                             componentProps: {
                                                 disabled,

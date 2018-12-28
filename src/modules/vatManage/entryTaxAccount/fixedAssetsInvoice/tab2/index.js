@@ -17,7 +17,7 @@ const getColumns = context =>[
     },{
         title: '不动产名称',
         dataIndex: 'assetName',
-        width:'200px',
+        // width:'200px',
     },{
         title: '不动产编号',
         dataIndex: 'assetNo',
@@ -248,7 +248,7 @@ export default class Tab2 extends Component{
                         })
                     },
                     scroll:{
-                        x:2900,
+                        x:3000,
                         y:window.screen.availHeight-430,
                     },
                 }}
