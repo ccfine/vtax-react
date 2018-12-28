@@ -35,7 +35,7 @@ const columns = [
         title:'期末增值税确认收入金额',
         dataIndex:'endTotalPrice',
         className:'text-right',
-        width:'200px',
+        // width:'200px',
         render:text=>fMoney(text)
     },
     {

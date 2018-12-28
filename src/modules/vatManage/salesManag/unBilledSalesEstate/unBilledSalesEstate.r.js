@@ -126,11 +126,11 @@ const columns = [
             {
                 title:'房间编码',
                 dataIndex:'roomCode',
-                width:'100px',
+                width:'150px',
             },{
                 title:'路址',
                 dataIndex:'htRoomName',
-                width:'150px',
+                // width:'150px',
             },
             {
                 title:'税率',
@@ -358,7 +358,7 @@ class unBilledSalesEstate extends Component{
                         } />
                     </div>,
                     scroll:{
-                        x:2050,
+                        x:2150,
                         y:window.screen.availHeight-430-(disabled?50:0),
                     },
                     onTotalSource: (totalSource) => {
