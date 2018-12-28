@@ -332,7 +332,7 @@ class ManualMatchRoomModal extends Component{
     }
     render(){
         const props = this.props;
-        const {title} = this.props;
+        const {title,declare} = this.props;
         const {tableKey,matching,popModalVisible,params} = this.state;
         return(
             <Modal
@@ -387,6 +387,7 @@ class ManualMatchRoomModal extends Component{
                     </Row>
                 </Card>
                 <SearchTable
+                    doNotFetchDidMount={!declare}
                     key={tableKey}
                     spinning={matching}
                     searchOption={{
@@ -398,7 +399,7 @@ class ManualMatchRoomModal extends Component{
                     tableOption={{
                         pageSize:100,
                         columns:getColumns(this),
-                        url:`/output/invoice/marry/manual/list?mainId=${props.selectedData['mainId']}&amount=${props.selectedData['amount']}&month=${props.declare['authMonth']}`,
+                        url:`/output/invoice/marry/manual/list?mainId=${props.selectedData['mainId']}&amount=${props.selectedData['amount']}&month=${declare && declare['authMonth']}`,
                     }}
                 >
                 </SearchTable>
