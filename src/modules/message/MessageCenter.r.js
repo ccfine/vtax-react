@@ -96,7 +96,7 @@ const getColumns = context => [
     {
         title: "公告标题",
         dataIndex: "title",
-        width:'100px',
+        width:'13%',
         render: (text) => {
             return `标题：${text}`
         }
@@ -104,12 +104,12 @@ const getColumns = context => [
     {
         title: "公告类型",
         dataIndex: "sysDictName",
-        width:'100px',
+        width:'13%',
     },
     {
         title: "公告级别",
         dataIndex: "level",
-        width:'100px',
+        width:'13%',
         render: (text) => {
             if (parseInt(text,0) === 1) {
                 return '紧急公告'
@@ -125,17 +125,17 @@ const getColumns = context => [
     {
         title: "生效日期",
         dataIndex: "takeDate",
-        width:'100px',
+        width:'13%',
     },
     {
         title: "发布时间",
         dataIndex: "publishDateStr",
-        width:'100px',
+        width:'13%',
     },
     {
         title: "阅读状态",
         dataIndex: "readStatus",
-        width:'100px',
+        width:'13%',
         render: (text) => {
             if (parseInt(text,0) === 1) {
                 return '已阅读'
@@ -149,12 +149,12 @@ const getColumns = context => [
     {
         title: "发布人",
         dataIndex: "publishBy",
-        width:'100px',
+        width:'13%',
     },
     {
         title: "操作",
         dataIndex: "taxableProject9",
-        width:'100px',
+        width:'9%',
         render(text, record, index) {
             return composeBotton([{
                 type:'action',
@@ -165,7 +165,6 @@ const getColumns = context => [
                     window.open(`/messageDetail?id=${record.id}&readStatus=${record.readStatus}`)
                 }
             }])
-            // return <a href={`/messageDetail?id=${record.id}&readStatus=${record.readStatus}`} target="_blank" onClick={() => context.handleGo(record)}>查看</a>
         },
     },
 ]
@@ -225,7 +224,6 @@ class MessageCenter extends Component {
         const { tableUpDateKey } = this.state;
         return (
             <div className="message-center">
-                {/* <span className="message-return" onClick={this.handleReturn}>返回</span> */}
                 <div style={{ margin: "0px 0 6px 6px" }} onClick={this.handleReturn}>
 					<span style={{fontSize:'12px',color:'rgb(153, 153, 153)',marginRight:12}}>
 						<Icon type="left" /><span>返回</span>
@@ -243,7 +241,7 @@ class MessageCenter extends Component {
                         columns: getColumns(this),
                         url: "/sysNotice/list",
                         key: tableUpDateKey,
-                        scroll: { x: 1000, y:window.screen.availHeight-500},
+                        scroll: { x: 1200, y:window.screen.availHeight-500},
                     }}
                 >
                 </SearchTable>
