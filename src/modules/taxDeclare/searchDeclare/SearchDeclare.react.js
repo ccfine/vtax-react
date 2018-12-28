@@ -19,33 +19,15 @@ const formItemStyle={
         span:16
     }
 }
-//纳税申报系统进度
-const status = [ 
-    {value:'1',text:'申报办理'},
-    {value:'2',text:'申报审核'},
-    {value:'3',text:'申报审批'},
-    {value:'4',text:'申报完成'},
-    {value:'5',text:'归档'},
-    {value:'-1',text:'流程终止'}
-]
 //申报状态
 const approvalStatus = [
+    {value: '-2', text: '未发起审批'},
     {value: '-1', text: '审批失败'},
     {value: '0', text: '审批中'},
     {value: '1', text: '审批成功'},
-    {value: '2', text: '已申报'},
 ]
 //扣款状态
 const deductionStatus= [
-    {value: '-2', text: '未发起扣款'},
-    {value: '-1', text: '扣款失败'},
-    {value: '0', text: '未扣款'},
-    {value: '1', text: '扣款中'},
-    {value: '2', text: '扣款成功'},
-    {value: '3', text: '无需扣款'},
-]
-//扣款状态 查询字段
-const deductionStatusSearch= [
     {value: '-1', text: '扣款失败'},
     {value: '0', text: '未扣款'},
     {value: '1', text: '扣款中'},
@@ -80,7 +62,7 @@ const searchFields = [
         fieldName:'deductionStatus',
         formItemStyle,
         span:8,
-        options:deductionStatusSearch
+        options:deductionStatus
     },
 ]
 const getColumns =(context)=>[
@@ -175,17 +157,17 @@ const getColumns =(context)=>[
         dataIndex: 'declarationDate',
     },{
         title: '申报状态',
-        dataIndex: 'status',
+        dataIndex: 'approvalStatusInfo',
         className:'text-center',
-        render:text=>{
-            status.map(o=>{
-                if( parseInt(o.value, 0) === parseInt(text, 0)){
-                    text = o.text
-                }
-                return '';
-            })
-            return text;
-        },
+        // render:text=>{
+        //     status.map(o=>{
+        //         if( parseInt(o.value, 0) === parseInt(text, 0)){
+        //             text = o.text
+        //         }
+        //         return '';
+        //     })
+        //     return text;
+        // },
     },{
         title: '扣款状态',
         dataIndex: 'deductionStatus',

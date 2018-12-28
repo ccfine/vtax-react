@@ -157,7 +157,7 @@ export default class PopDetailsModal extends Component{
                                             userPermissions:['1935005'],
                                             onClick: () => {
                                                 const { dataSource } = this.state;
-                                                let arr = dataSource.filter(item => item.deductionStatus === '2' || item.deductionStatus === '3')
+                                                let arr = dataSource.filter(item => item.deductionStatus === '7' || item.deductionStatus === '9' || item.deductionStatus === '11')
                                                 if (arr.length === 0) {
                                                     this.handelArchiving(record,'/tax/decConduct/query/deductions', 'deductions')
                                                 } else {

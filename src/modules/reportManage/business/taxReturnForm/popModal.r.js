@@ -47,9 +47,12 @@ class PopModal extends Component{
                 if (data.code === 200) {
                     let res = data.data;
                     this.setState({
-                        beforeTaxesConstruction: res.addendumAmountRecord.beforeTaxesConstruction,
-                        beforeOnSalesPayment: res.addendumAmountRecord.beforeOnSalesPayment,
-                        beforeTaxesRealEstateRental: res.addendumAmountRecord.beforeTaxesRealEstateRental,
+                        buildingServicesTaxAmount: res.buildingServicesTaxAmount,
+                        onSalesEstateTaxAmount: res.onSalesEstateTaxAmount,
+                        leaseholdTaxAmount: res.leaseholdTaxAmount,
+                        beforeTaxesConstruction: res.beforeTaxesConstruction,
+                        beforeOnSalesPayment: res.beforeOnSalesPayment,
+                        beforeTaxesRealEstateRental: res.beforeTaxesRealEstateRental,
                         totalAmount:res.totalAmount,
                         res
                     })
@@ -70,7 +73,7 @@ class PopModal extends Component{
                     afterTaxesConstruction: values.afterTaxesConstruction.replace(/\$\s?|(,*)/g, ''),
                     afterOnSalesPayment: values.afterOnSalesPayment.replace(/\$\s?|(,*)/g, ''),
                     afterTaxesRealEstateRental: values.afterTaxesRealEstateRental.replace(/\$\s?|(,*)/g, ''),
-                    id: (res && res.addendumAmountRecord.id) || '',
+                    id: (res && res.id) || '',
                     mainId: declare.mainId,
                     month: declare.authMonth
                 }
@@ -126,13 +129,13 @@ class PopModal extends Component{
     render(){
         const { title,visible,toggleModalVisible } = this.props;
         const { getFieldDecorator } = this.props.form;
-        const {beforeTaxesConstruction,beforeOnSalesPayment,beforeTaxesRealEstateRental,totalAmount,loading,btnLoading} = this.state;
+        const {buildingServicesTaxAmount,onSalesEstateTaxAmount,leaseholdTaxAmount,beforeTaxesConstruction,beforeOnSalesPayment,beforeTaxesRealEstateRental,totalAmount,loading,btnLoading} = this.state;
         return(
             <Modal
                 maskClosable={false}
                 destroyOnClose={true}
                 onCancel={()=>toggleModalVisible(false)}
-                width={500}
+                width={700}
                 style={{ top: 250 ,maxWidth:'80%'}}
                 visible={visible}
                 footer={
@@ -147,18 +150,20 @@ class PopModal extends Component{
                 title={title}>
                 <Spin spinning={loading}>
                     <Form>
-                        <p style={{color:'red'}}>{`分次预缴税款总额不可超过${totalAmount || '--'}`}</p>
-                        <table border="1" style={{border:'1px solid #e8e8e8'}}>
+                        <p style={{color:'red'}}>{`分次预缴税款总额不可超过${totalAmount || '--'}，单个调整事项不可大于本期应抵减税额`}</p>
+                        <table border="1" style={{border:'1px solid #e8e8e8',width:660}}>
                             <thead>
                                 <tr style={{height:'31px'}}>
                                     <th style={{width: '180px',padding:'6px'}}></th>
-                                    <th style={{width: '100px',textAlign:'right',padding:'6px'}}>调整前</th>
-                                    <th style={{width: '100px',textAlign:'right',padding:'6px'}}>调整后</th>
+                                    <th style={{width: '100px',textAlign:'right',padding:'6px'}}>本期应抵减税额</th>
+                                    <th style={{width: '100px',textAlign:'right',padding:'6px'}}>本期实际抵减税额</th>
+                                    <th style={{width: '100px',textAlign:'right',padding:'6px'}}>本期实际抵减税额调整结果</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr style={{height:'31px'}}>
                                     <td>建筑服务预征缴纳税款</td>
+                                    <td style={{textAlign:'right'}}>{fMoney(buildingServicesTaxAmount) || '--'}</td>
                                     <td style={{textAlign:'right'}}>{fMoney(beforeTaxesConstruction) || '--'}</td>
                                     <td>
                                         <NumericInputCell
@@ -174,6 +179,7 @@ class PopModal extends Component{
                                 </tr>
                                 <tr style={{height:'31px'}}>
                                     <td>销售不动产预征缴纳税款</td>
+                                    <td style={{textAlign:'right'}}>{fMoney(onSalesEstateTaxAmount) || '--'}</td>
                                     <td style={{textAlign:'right'}}>{fMoney(beforeOnSalesPayment) || '--'}</td>
                                     <td>
                                         <NumericInputCell
@@ -190,6 +196,7 @@ class PopModal extends Component{
                                 </tr>
                                 <tr style={{height:'31px'}}>
                                     <td>出租不动产预征缴纳税款</td>
+                                    <td style={{textAlign:'right'}}>{fMoney(leaseholdTaxAmount) || '--'}</td>
                                     <td style={{textAlign:'right'}}>{fMoney(beforeTaxesRealEstateRental) || '--'}</td>
                                     <td>
                                         <NumericInputCell
