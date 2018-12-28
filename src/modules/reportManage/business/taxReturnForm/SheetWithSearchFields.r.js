@@ -81,8 +81,7 @@ const searchFields = (context,disabled,declare,defaultParams={},tabIndex,isProje
                 url: `/project/list/${(getFieldValue('main') && getFieldValue('main').key ) || (declare && declare.mainId)}`,
             },
             fieldDecoratorOptions:{
-                initialValue: !!declare ? '' : JSON.stringify(defaultParams) !== "{}" ? (!!defaultParams.projectNum ? defaultParams.projectNum : '') : '',
-
+                initialValue: (!!declare && declare.projectNum) || (JSON.stringify(defaultParams) !== "{}" && defaultParams.projectNum) || ''
             }
         })
     }
