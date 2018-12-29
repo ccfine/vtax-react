@@ -14,12 +14,12 @@ const columns = context => [
     {
         title: "收入类型",
         dataIndex: "incomeType",
-        width: "200px"
+        // width: "200px"
     },
     {
         title: "税率",
         dataIndex: "taxRateName",
-        width: "200px"
+        // width: "200px"
     },
     {
         title: "上期末合计金额",
@@ -27,21 +27,21 @@ const columns = context => [
             {
                 title: "增值税收入确认金额",
                 dataIndex: "beforeConfirmAmount",
-                width: "220px",
+                // width: "220px",
                 render: text => fMoney(text),
                 className: "table-money"
             },
             {
                 title: "增值税开票金额",
                 dataIndex: "beforeBillingAmount",
-                width: "200px",
+                // width: "200px",
                 render: text => fMoney(text),
                 className: "table-money"
             },
             {
                 title: "未开具发票销售额",
                 dataIndex: "beforeUnbillingAmount",
-                width: "200px",
+                // width: "200px",
                 render: text => fMoney(text),
                 className: "table-money"
             }
@@ -53,7 +53,7 @@ const columns = context => [
             {
                 title: "增值税收入确认金额",
                 dataIndex: "confirmAmount",
-                width: "220px",
+                // width: "220px",
                 render: (text, record) => (
                     <a title="查看详情"
                        onClick={ () => context.toggleModalVoucherVisibleConfirm(true, record.subjectId, record.taxRateId) }
@@ -66,7 +66,7 @@ const columns = context => [
             {
                 title: "增值税开票金额",
                 dataIndex: "billingAmount",
-                width: "200px",
+                // width: "200px",
                 render: (text, record) => (
                     <a title="查看详情"
                        onClick={ () => context.toggleModalVoucherVisibleInvoice(true, record.subjectId, record.taxRateId) }
@@ -79,7 +79,7 @@ const columns = context => [
             {
                 title: "未开具发票销售额",
                 dataIndex: "unbillingAmount",
-                width: "200px",
+                // width: "200px",
                 render: text => fMoney(text),
                 className: "table-money"
             }
@@ -91,21 +91,21 @@ const columns = context => [
             {
                 title: "增值税收入确认金额",
                 dataIndex: "endConfirmAmount",
-                width: "220px",
+                // width: "220px",
                 render: text => fMoney(text),
                 className: "table-money"
             },
             {
                 title: "增值税开票金额",
                 dataIndex: "endBillingAmount",
-                width: "200px",
+                // width: "200px",
                 render: text => fMoney(text),
                 className: "table-money"
             },
             {
                 title: "未开具发票销售额",
                 dataIndex: "endUnbillingAmount",
-                width: "200px",
+                // width: "200px",
                 render: text => fMoney(text),
                 className: "table-money"
             }
@@ -114,14 +114,14 @@ const columns = context => [
     {
         title: "本期应申报未开票销售额",
         dataIndex: "currentUnbillingAmount",
-        width: "250px",
+        // width: "250px",
         render: text => fMoney(text),
         className: "table-money"
     },
     {
         title: "本期应申报未开票销售税额",
         dataIndex: "currentTaxAmount",
-        width: "250px",
+        // width: "250px",
         render: text => fMoney(text),
         className: "table-money"
     }
@@ -720,7 +720,7 @@ class UnBilledSalesNotEstate extends Component {
                                         this.setState({
                                             totalSource
                                         })
-                                    }
+                                    },
                                 }} />
 
                 </Card>
