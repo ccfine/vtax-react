@@ -303,7 +303,11 @@ class PopModal extends Component {
                                         disabled:readonly,
                                         selectOptions: {
                                             disabled:readonly,
-                                            labelInValue: true
+                                            labelInValue: true,
+                                            onChange: (value) => {
+                                                const { setFieldsValue } = this.props.form;
+                                                setFieldsValue({stages: undefined})
+                                            },
                                         },
                                         fieldTextName: "profitName",
                                         fieldValueName: "id",
