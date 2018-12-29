@@ -453,7 +453,7 @@ class TaxExemptionDetails extends Component {
                     },
                     scroll: {
                         y: window.screen.availHeight - 400 - (disabled ? 50 : 0),
-                        x: (showProfitCenter && isEnabled) ? 1250 : 1100
+                        x: (showProfitCenter && isEnabled) ? 1600 : 1500
                     },
                     extra: <div>
                         {
