@@ -174,12 +174,9 @@ const columns = [
             t = "认证成功"
             break
           case 2:
-            t = "认证失败"
+            t = "未认证"
             break
-          case 0:
-            t = "无需认证"
-            break
-          default:  
+          default:
         }
         return t
       },
