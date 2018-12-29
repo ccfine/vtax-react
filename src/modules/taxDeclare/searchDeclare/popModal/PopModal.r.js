@@ -8,34 +8,25 @@ import {request,composeBotton} from 'utils'
 const columns = [
     {
         title: '申报表类型',
-        dataIndex: 'type',
-        width: '100px',
-        render: text => {
-            if (text === '1') {
-                return '增值税一般纳税人';
-            }
-            if (text === '2') {
-                return '增值税预缴';
-            }
-            return text;
-        }
+        dataIndex: 'declareType',
+        width: '20%',
     }, {
         title: '税局审批结果',
         dataIndex: 'approvalStatusInfo',
-        width: '100px',
+        width: '20%',
     }, {
         title: '扣款状态',
         dataIndex: 'deductionStatusInfo',
-        width: '100px',
+        width: '20%',
     }, {
         title: '扣款金额',
         dataIndex: 'taxAmount',
         className: "table-money",
-        width: '100px',
+        width: '20%',
     }, {
         title: '失败结果说明',
         dataIndex: 'errorMessage',
-        width: '100px',
+        width: '20%',
     }
 ];
 
