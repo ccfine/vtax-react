@@ -160,6 +160,11 @@ const columns = [
       width: "200px"
     },
     {
+        title: "组织",
+        dataIndex: "orgName",
+        // width: "200px"
+    },
+    {
         title: "纳税主体编码",
         dataIndex: "taxNum",
         width: "100px",
@@ -167,7 +172,7 @@ const columns = [
     {
       title: '纳税主体',
       dataIndex: 'mainName',
-    //   width: "200px"
+      width: "200px"
     },
     {
         title: "纳税人识别号",
@@ -296,7 +301,7 @@ export default class TaxReturnProgressTrackTable extends Component{
                             totalSource
                         })
                     },
-                    scroll:{ x: 2350, y:window.screen.availHeight-450},
+                    scroll:{ x: 2600, y:window.screen.availHeight-450},
                 }}
             />
         )

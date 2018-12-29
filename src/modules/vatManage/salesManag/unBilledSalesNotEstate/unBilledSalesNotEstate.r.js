@@ -658,16 +658,18 @@ class UnBilledSalesNotEstate extends Component {
                               }])
                           }
                           {
+                              composeBotton([{
+                                type:'consistent',
+                                btnType:'default',
+                                text:'转租业务凭证',
+                                userPermissions:['1265014'],
+                                onClick:()=>{
+                                    this.toggleModalVoucherVisible(true);
+                                }
+                            }])
+                          }
+                          {
                               (disabled && handle) && composeBotton([{
-                                  type:'consistent',
-                                  //icon:'exception',
-                                  btnType:'default',
-                                  text:'转租业务凭证',
-                                  userPermissions:['1265014'],
-                                  onClick:()=>{
-                                      this.toggleModalVoucherVisible(true);
-                                  }
-                              },{
                                   type:'reset',
                                   url:'/account/invoiceSale/unrealty/reset',
                                   params:filters,
