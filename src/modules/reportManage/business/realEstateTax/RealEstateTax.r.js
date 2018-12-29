@@ -89,7 +89,7 @@ const columns=[
     },{
         title: '项目分期名称',
         dataIndex: 'stagesName',
-        width:'200px',
+        // width:'200px',
     },{
         title: '产品编码',
         dataIndex: 'assetNo',
@@ -97,7 +97,7 @@ const columns=[
     },{
         title: '产品名称',
         dataIndex: 'assetName',
-        width:'200px',
+        width:'300px',
     },{
         title: '入账日期',
         dataIndex: 'accountDate',
@@ -178,7 +178,7 @@ export default class SalesInvoiceCollection extends Component{
                             totalSource
                         })
                     },
-                    scroll:{ x: 1300,y:window.screen.availHeight-360, },
+                    scroll:{ x: 1500,y:window.screen.availHeight-360, },
                 }}
             />
         )
