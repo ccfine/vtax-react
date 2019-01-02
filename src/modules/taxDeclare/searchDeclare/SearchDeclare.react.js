@@ -49,6 +49,22 @@ const searchFields = [
         span:8,
     },
     {
+        label:'纳税申报系统进度',
+        type:'select',
+        fieldName:'status',
+        formItemStyle,
+        span:8,
+        options:[  //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
+            {
+                text:'申报完成',
+                value:'4'
+            },{
+                text:'申报归档',
+                value:'5'
+            }
+        ],
+    },
+    {
         label:'申报状态',
         type:'select',
         fieldName:'approvalStatus',
@@ -119,7 +135,25 @@ const getColumns =(context)=>[
         fixed: "left",
         width: "100px",
         dataIndex: "action"
-    }, {
+    },{
+        title: '纳税申报系统进度',
+        dataIndex: 'status',
+        className:'text-center',
+        render:text=>{
+            let t = '';
+            switch (parseInt(text,0)){
+                case 4:
+                    t=<span style={{ color: '#1795f6' }}>申报完成</span>;
+                    break;
+                case 5:
+                    t=<span style={{ color: '#7a7e91' }}>申报归档</span>;
+                    break;
+                default:
+                //no default
+            }
+            return t;
+        }
+    },{
         title: '纳税主体',
         dataIndex: 'mainName',
     },{
