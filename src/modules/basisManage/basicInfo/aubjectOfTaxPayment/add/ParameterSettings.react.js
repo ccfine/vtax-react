@@ -130,6 +130,50 @@ export default class ParameterSettings extends Component{
                             },
                             {
 
+                                label: '使用一键申报',
+                                fieldName: 'taxSubjectConfigBO.keyDeclare',
+                                type: 'checkbox',
+                                span: 6,
+                                formItemStyle:{
+                                    labelCol:{
+                                        span:20
+                                    },
+                                    wrapperCol:{
+                                        span:4
+                                    }
+                                },
+                                fieldDecoratorOptions: {
+                                    initialValue: defaultData!==null && parseInt(defaultData.keyDeclare,0) === 1,
+                                    valuePropName: 'checked',
+                                },
+                                componentProps: {
+                                    disabled,
+                                },
+                            },
+                            {
+
+                                label: '大厅申报预缴税款',
+                                fieldName: 'taxSubjectConfigBO.hallTax',
+                                type: 'checkbox',
+                                span: 8,
+                                formItemStyle:{
+                                    labelCol:{
+                                        span:20
+                                    },
+                                    wrapperCol:{
+                                        span:4
+                                    }
+                                },
+                                fieldDecoratorOptions: {
+                                    initialValue: defaultData!==null && parseInt(defaultData.hallTax,0) === 1,
+                                    valuePropName: 'checked',
+                                },
+                                componentProps: {
+                                    disabled,
+                                },
+                            },
+                            {
+
                                 label: '按项目预缴税款',
                                 fieldName: 'taxSubjectConfigBO.projectSum',
                                 type: 'checkbox',

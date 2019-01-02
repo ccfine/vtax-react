@@ -106,6 +106,8 @@ class Add extends Component {
                         prepayTaxesDeduction: values.taxSubjectConfigBO.prepayTaxesDeduction === true ? '1' : '0',
                         unusedMarketingSystem: values.taxSubjectConfigBO.unusedMarketingSystem === true ? '1' : '0',
                         jointDevelopment:values.taxSubjectConfigBO.jointDevelopment === true ? '1' : '0',
+                        keyDeclare: values.taxSubjectConfigBO.keyDeclare === true ? '1' : '0',//使用一键申报
+                        hallTax: values.taxSubjectConfigBO.hallTax === true ? '1' : '0',//大厅申报预缴税款
                         projectSum: values.taxSubjectConfigBO.projectSum === true ? '1' : '0',
                         // confirmType:values.taxSubjectConfigBO.confirmType,
                         dimensionality: values.taxSubjectConfigBO.dimensionality,
@@ -116,6 +118,8 @@ class Add extends Component {
                         prepayTaxesDeduction: values.taxSubjectConfigBO.prepayTaxesDeduction === true ? '1' : '0',
                         unusedMarketingSystem: values.taxSubjectConfigBO.unusedMarketingSystem === true ? '1' : '0',
                         jointDevelopment:values.taxSubjectConfigBO.jointDevelopment === true ? '1' : '0',
+                        keyDeclare: values.taxSubjectConfigBO.keyDeclare === true ? '1' : '0',//使用一键申报
+                        hallTax: values.taxSubjectConfigBO.hallTax === true ? '1' : '0',//大厅申报预缴税款
                         projectSum: values.taxSubjectConfigBO.projectSum === true ? '1' : '0',
                         // confirmType:values.taxSubjectConfigBO.confirmType,
                         dimensionality: values.taxSubjectConfigBO.dimensionality,
