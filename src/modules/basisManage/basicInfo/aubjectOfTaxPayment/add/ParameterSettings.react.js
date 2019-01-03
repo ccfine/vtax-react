@@ -13,7 +13,7 @@ export default class ParameterSettings extends Component{
         this.mounted=null
     }
     render(){
-        const {defaultData} = this.props;
+        const {defaultData,form} = this.props;
         let disabled = this.props.type ==='view';
         return(
             <div className="basicInfo" style={{height:'350px',overflow:'hidden',overflowY:'auto'}}>
@@ -145,6 +145,11 @@ export default class ParameterSettings extends Component{
                                 fieldDecoratorOptions: {
                                     initialValue: defaultData!==null && parseInt(defaultData.keyDeclare,0) === 1,
                                     valuePropName: 'checked',
+                                    onChange: (e) => {
+                                        if (!e.target.checked) {
+                                            form.setFieldsValue({[`taxSubjectConfigBO.hallTax`]: undefined})
+                                        }
+                                    }
                                 },
                                 componentProps: {
                                     disabled,
@@ -169,7 +174,7 @@ export default class ParameterSettings extends Component{
                                     valuePropName: 'checked',
                                 },
                                 componentProps: {
-                                    disabled,
+                                    disabled: disabled || !form.getFieldValue('taxSubjectConfigBO.keyDeclare'),
                                 },
                             },
                             {

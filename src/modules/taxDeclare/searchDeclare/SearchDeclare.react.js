@@ -169,6 +169,12 @@ const getColumns =(context)=>[
         title: '申报状态',
         dataIndex: 'approvalStatusInfo',
         className:'text-center',
+        render: text=>{
+            if (!text) {
+                return '--'
+            }
+            return text
+        }
     },{
         title: '扣款状态',
         dataIndex: 'deductionStatus',
@@ -177,7 +183,7 @@ const getColumns =(context)=>[
                 if( parseInt(o.value, 0) === parseInt(text, 0)){
                     text = o.text
                 }
-                return '';
+                return '--';
             })
             return text;
         },
@@ -185,6 +191,12 @@ const getColumns =(context)=>[
         title: '扣款金额',
         dataIndex: 'taxAmount',
         className: "table-money",
+        render: text=>{
+            if (!text) {
+                return '--'
+            }
+            return text
+        }
     }
 ];
 
