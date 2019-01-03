@@ -33,7 +33,7 @@ const pointerStyleDelete = {
 const columns = (context,readonly) => {
     let operates = readonly?[]:[{
         title: '操作',
-        width:'10%',
+        width:'65px',
         dataIndex:'action',
         className:'text-center',
         render:(text,record)=>(
@@ -55,6 +55,7 @@ const columns = (context,readonly) => {
         ,{
             title: '税收分类编码',
             dataIndex: 'num',
+            width: "300px",
         }, {
             title: '货物或应税劳务、服务名称',
             dataIndex: 'commodityName',
@@ -641,7 +642,7 @@ class PopModal extends Component {
                                                 size:'small',
                                                 columns:columns(this,readonly),
                                                 scroll:{
-                                                    x:"100%",
+                                                    // x:"100%",
                                                     y:"200px",
                                                 },
                                             }} />

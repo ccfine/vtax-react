@@ -2,9 +2,10 @@
 import React, { Component } from 'react'
 import {Card,message,Form,Row,Col,Button,Modal,Icon} from 'antd'
 import {connect} from 'react-redux'
-import {request} from 'utils'
+import {request,composeBotton} from 'utils'
 import {AsyncTable} from 'compoments'
 import { SelectCell } from 'compoments/EditableCell'
+import PopModal from './popModal';
 
 const columns = (context) =>[{
     title: '利润中心名称',
@@ -12,19 +13,50 @@ const columns = (context) =>[{
 },{
     title: '利润中心编码',
     dataIndex: 'profitNum',
-    width: '350px'
+    width: '300px'
 }];
-const table_1_columns = [{
+const table_1_columns = (context) => [{
+    title: "操作",
+    render(text, record, index) {
+        return composeBotton([{
+            type:'action',
+            title:'编辑地址',
+            icon:'edit',
+            userPermissions:['1051004'],
+            onSuccess:()=>context.showModal(record)
+        }]);
+    },
+    fixed: "left",
+    width: 62,
+    className:'text-center',
+    dataIndex: "action"
+}, {
     title: '项目名称',
     dataIndex: 'itemName',
 }, {
     title: '项目代码',
     dataIndex: 'itemNum',
-    width:'350px',
+    width:'150px',
 }, {
-    title: '项目地址',
+    title: '所属省份',
+    dataIndex: 'provinceName',
+    width:'150px',
+}, {
+    title: '所属地市',
+    dataIndex: 'cityName',
+    width:'150px',
+}, {
+    title: '所属区县',
+    dataIndex: 'countyName',
+    width:'150px',
+}, {
+    title: '所属街道乡镇',
+    dataIndex: 'townName',
+    width:'150px',
+}, {
+    title: '详细地址',
     dataIndex: 'proadrs',
-    width:'350px',
+    width:'300px',
 }];
 const table_2_columns = (context, getFieldDecorator) =>[{
     title: '项目分期名称',
@@ -32,11 +64,11 @@ const table_2_columns = (context, getFieldDecorator) =>[{
 }, {
     title: '项目分期代码',
     dataIndex: 'itemNum',
-    width:'350px',
+    width:'300px',
 }, {
     title: '计税方法',
     dataIndex: 'taxMethod',
-    width:'350px',
+    width:'300px',
     render:(text,record)=>{
         //1一般计税方法，2简易计税方法 ,
         text = parseInt(text,0);
@@ -101,6 +133,8 @@ class ProjectManagement extends Component{
         tableUpDateKey1:Date.now(),
         tableUpDateKey2:Date.now()+1,
         loading:false,
+        visible:false,
+        record: {},
     }
     componentDidMount(){
         const taxSubjectId = this.props.match.params.id;
@@ -195,8 +229,18 @@ class ProjectManagement extends Component{
     componentWillUnmount(){
         this.mounted=null
     }
+    showModal=(record)=>{
+        this.setState({
+            record,
+        },()=>{
+            this.toggleVisible(true)
+        })
+    }
+    toggleVisible=visible=>{
+        this.setState({visible})
+    }
     render(){
-        const {updateKey,selectedRowKeys,selectedRowTaxSubjectKeys,tableUpDateKey1,tableUpDateKey2} = this.state,
+        const {updateKey,selectedRowKeys,selectedRowTaxSubjectKeys,tableUpDateKey1,tableUpDateKey2,visible,record} = this.state,
             taxSubjectId = this.props.match.params.id;
         const {getFieldDecorator} = this.props.form;
         return(
@@ -298,17 +342,22 @@ class ProjectManagement extends Component{
                                             rowKey:record=>record.id,
                                             //pageSize:100,
                                             size:'small',
-                                            columns:table_1_columns,
+                                            columns:table_1_columns(this),
                                             pagination:false,
                                             scroll:{
-                                                x:200,
+                                                x:1400,
                                                 y:window.screen.availHeight-320,
                                             },
                                         }} />
                         </Card>
                     </Col>
                 </Row>
-
+                <PopModal 
+                    visible={visible}
+                    record={record}
+                    toggleModal={this.toggleVisible}
+                    refreshTableThree={this.refreshTableThree}
+                />                      
             </React.Fragment>
         )
     }
