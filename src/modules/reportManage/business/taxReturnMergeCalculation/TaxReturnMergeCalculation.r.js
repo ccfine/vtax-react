@@ -4,7 +4,8 @@
 import React,{Component} from 'react'
 import 'react-datasheet/lib/react-datasheet.css';
 import 'modules/reportManage/business/taxReturnForm/sheet.css'
-import { Tabs } from 'antd';
+import { Tabs, message } from 'antd';
+import {request} from 'utils'
 import sheet_0 from 'modules/reportManage/business/taxReturnForm/sheetData/sheet0'
 import sheet_1 from 'modules/reportManage/business/taxReturnForm/sheetData/sheet1'
 import sheet_2 from 'modules/reportManage/business/taxReturnForm/sheetData/sheet2'
@@ -94,7 +95,8 @@ const sheetData = [
 export default class TaxReturnMergeCalculation extends Component{
     state={
         activeKey:'0',
-        params:{}
+        params:{},
+        isProjectNum:false,
     }
     onChange = activeKey =>{
         this.setState({activeKey})
@@ -104,8 +106,21 @@ export default class TaxReturnMergeCalculation extends Component{
             params:values
         })
     }
+    fetchTaxSubjectConfig = (mainId) => {
+        if (mainId === undefined) return;
+        request.get(`/taxsubject/get/taxSubjectConfig/${mainId}`)
+            .then(({data}) => {
+                if(data.code===200){
+                    const result = data.data;
+                    this.setState({isProjectNum: result.projectSum === '1'})
+                }
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
+    }
     render () {
-        const {activeKey,params} = this.state,
+        const {activeKey,params,isProjectNum} = this.state,
             {declare,type,partnerId} = this.props;
         return (
             <React.Fragment>
@@ -118,7 +133,7 @@ export default class TaxReturnMergeCalculation extends Component{
                             <TabPane tab={item.tab} key={i}>
                                 {
                                     parseInt(activeKey,0) === i ?
-                                        <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} declare={declare} type={type} partnerId={partnerId} reportType={i}/>
+                                        <SheetWithSearchFields {...item} onParamsChange={this.onParamsChange} defaultParams={params} declare={declare} type={type} partnerId={partnerId} reportType={i} isProjectNum={isProjectNum} fetchTaxSubjectConfig={this.fetchTaxSubjectConfig} />
                                         : ''
                                 }
                             </TabPane>
