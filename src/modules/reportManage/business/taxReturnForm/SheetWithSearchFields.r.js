@@ -158,6 +158,9 @@ class SheetWithSearchFields extends Component{
                     values.mainId = values.main.key
                     delete values.main
                 }
+                if (values.map) {
+                    delete values.map
+                }
                 this.mounted && this.setState({
                     params: values,
                     updateKey:Date.now()
