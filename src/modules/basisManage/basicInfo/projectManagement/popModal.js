@@ -30,6 +30,22 @@ class PopModal extends Component{
         }
     }
     componentWillReceiveProps(nextProps){
+        if(!nextProps.visible){
+            /**
+             * 关闭的时候清空表单
+             * */
+            nextProps.form.resetFields();
+            this.setState({
+                provinceList: [], //省份
+                cityList: [], //地市
+                countyList: [], //区县
+                townList: [], //乡镇街道
+                provinceLoading: false,
+                cityLoading: false,
+                countyLoading: false,
+                townLoading: false
+            })
+        }
         if(nextProps.visible && !this.props.visible){
             const { record } = this.props;
             // 首次打开弹窗 请求省份
@@ -49,7 +65,7 @@ class PopModal extends Component{
                     province: values.province,
                     city: values.city,
                     county: values.county,
-                    town: values.town || '',
+                    town: values.town,
                     id: record.id,
                 }
                 request.put('/taxsubject/update/project',params)
@@ -94,7 +110,11 @@ class PopModal extends Component{
         setFieldsValue({
             city: undefined,
             county: undefined,
-            town: undefined
+            town: undefined,
+        })
+        this.setState({
+            countyList: [], //区县
+            townList: [], //乡镇街道
         })
         this.getlistArea(value, 'city')
     }
@@ -104,6 +124,9 @@ class PopModal extends Component{
         setFieldsValue({
             county: undefined,
             town: undefined
+        })
+        this.setState({
+            townList: [], //乡镇街道
         })
         this.getlistArea(value, 'county')
     }
@@ -161,7 +184,7 @@ class PopModal extends Component{
                                 >
                                     {getFieldDecorator('city', {
                                         initialValue: record.city || undefined,
-                                        rules: [{ required: true, message: '请选择所属地市' }],
+                                        // rules: [{ required: true, message: '请选择所属地市' }],
                                     })(
                                         <Select placeholder='请选择所属地市' onChange={this.handleCity}>
                                             {
@@ -181,7 +204,7 @@ class PopModal extends Component{
                                 >
                                     {getFieldDecorator('county', {
                                         initialValue: record.county || undefined,
-                                        rules: [{ required: true, message: '请选择所属区县' }],
+                                        // rules: [{ required: true, message: '请选择所属区县' }],
                                     })(
                                         <Select placeholder='请选择所属区县' onChange={this.handleCounty}>
                                             {
