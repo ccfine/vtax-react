@@ -230,14 +230,14 @@ const columns = [
         ]
     },
     {
-        title:'期末未开具发票销售额',
+        title:'本期应申报未开票销售额',
         dataIndex:'totalNoInvoiceSales',
         render:text=>fMoney(text),
         className:'table-money',
         width:'150px',
     },
     {
-        title:'期末未开具发票销项税额',
+        title:'本期应申报未开票销售税额',
         dataIndex:'taxAmount',
         render:text=>fMoney(text),
         className:'table-money',
@@ -339,11 +339,11 @@ class unBilledSalesEstate extends Component{
                                 {
                                     title:'合计',
                                     total:[
-                                        {title: '期末未开具发票销售额', dataIndex: 'allTotalNoInvoiceSales'},
+                                        {title: '本期应申报未开票销售额', dataIndex: 'allTotalNoInvoiceSales'},
 
                                         {title: '上期末增值税收入确认金额', dataIndex: 'allSumTotalPrice'},
                                         {title: '上期末增值税开票金额', dataIndex: 'allSumTotalAmount'},
-                                        {title: '上期末未开具发票销售额', dataIndex: 'allSumNoInvoiceSales'},
+                                        {title: '上本期应申报未开票销售额', dataIndex: 'allSumNoInvoiceSales'},
 
                                         {title: '本期增值税收入确认金额', dataIndex: 'allTotalPrice'},
                                         {title: '本期增值税开票金额', dataIndex: 'allTotalAmount'},
@@ -351,7 +351,7 @@ class unBilledSalesEstate extends Component{
 
                                         {title: '本期末增值税收入确认金额', dataIndex: 'allEndTotalPrice'},
                                         {title: '本期末增值税开票金额', dataIndex: 'allEndTotalAmount'},
-                                        {title: '本期末未开具发票销售额', dataIndex: 'allEndNoInvoiceSales'},
+                                        {title: '本本期应申报未开票销售额', dataIndex: 'allEndNoInvoiceSales'},
                                     ],
                                 }
                             ]

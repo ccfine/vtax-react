@@ -46,14 +46,14 @@ const columns = [
         render:text=>fMoney(text)
     },
     {
-        title:'期末未开具发票销售额',
+        title:'本期应申报未开票销售额',
         dataIndex:'totalNoInvoiceSales',
         className:'text-right',
         width:'150px',
         render:text=>fMoney(text)
     },
     {
-        title:'期末未开具发票销项税额',
+        title:'本期应申报未开票销售税额',
         dataIndex:'taxAmount',
         className:'text-right',
         width:'200px',
