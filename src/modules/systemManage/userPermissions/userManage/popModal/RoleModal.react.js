@@ -164,7 +164,7 @@ class RoleModal extends React.Component {
                 confirmLoading={submitLoading}
                 width="800px"
                 style={{top:'5%'}}
-                bodyStyle={{maxHeight:400,overflowY:'auto',margin:0,paddingLeft:0,paddingRight:0}}
+                bodyStyle={{minHeight:400,overflowY:'auto',margin:0,paddingLeft:0,paddingRight:0}}
             >
                 <Spin spinning={roleLoading || charLoading}>
                     <Form
