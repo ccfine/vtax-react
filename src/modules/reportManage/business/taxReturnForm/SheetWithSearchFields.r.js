@@ -32,7 +32,12 @@ const searchFields = (context,disabled,declare,defaultParams={},tabIndex,isProje
                 disabled,
                 onSelect: (value) => {
                     if (context.props.tabIndex === 6) {
-                        context.props.fetchTaxSubjectConfig(value.key)
+                        const { getFieldValue } = context.props.form;
+                        const M = getFieldValue('taxMonth')
+                        const authMonth = moment(M, 'YYYY-MM').format('YYYY-MM')
+                        if (M !== undefined) {
+                            context.props.fetchTaxSubjectConfig({mainId:value.key,authMonth})
+                        }
                     }
                 }
             },
@@ -53,6 +58,15 @@ const searchFields = (context,disabled,declare,defaultParams={},tabIndex,isProje
             type:'monthPicker',
             componentProps:{
                 disabled,
+                onChange: (date, dateString) => {
+                    if (context.props.tabIndex === 6) {
+                        const { getFieldValue } = context.props.form;
+                        const M = getFieldValue('main')
+                        if (M !== undefined) {
+                            context.props.fetchTaxSubjectConfig({mainId:M.key,authMonth:dateString})
+                        }
+                    }
+                }
             },
             fieldDecoratorOptions:{
 
@@ -125,9 +139,13 @@ class SheetWithSearchFields extends Component{
     }
     componentDidMount(){
         const { declare, defaultParams } = this.props;
-    
-        if (this.props.tabIndex === 6) {
-            this.props.fetchTaxSubjectConfig(!!declare ? declare.mainId : defaultParams.mainId)
+        
+        const params = {
+            mainId: !!declare ? declare.mainId : defaultParams.mainId,
+            authMonth: !!declare ? declare.authMonth : defaultParams.authMonth,
+        }
+        if (this.props.tabIndex === 6 && params.mainId !== undefined && params.authMonth !== undefined) {
+            this.props.fetchTaxSubjectConfig(params)
         }
         if (!!declare) {
             this.mounted && this.setState({

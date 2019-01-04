@@ -104,9 +104,9 @@ class TaxReturnForm extends Component{
             params:values
         })
     }
-    fetchTaxSubjectConfig = (mainId) => {
-        if (mainId === undefined) return;
-        request.get(`/taxsubject/get/taxSubjectConfig/${mainId}`)
+    fetchTaxSubjectConfig = (params) => {
+        // if (mainId === undefined) return;
+        request.get(`/tax/decConduct/get/taxDeclarationConfig`,{params})
             .then(({data}) => {
                 if(data.code===200){
                     const result = data.data;
