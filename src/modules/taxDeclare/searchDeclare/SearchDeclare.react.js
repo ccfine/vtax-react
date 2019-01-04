@@ -89,7 +89,8 @@ const getColumns =(context)=>[
             let t = undefined;
             let q = undefined;
             let deductionStatus = parseInt(record.deductionStatus,0);
-            if((deductionStatus === 2 && record.keyDeclare === '1')){
+            let status = parseInt(record.status,0);
+            if( (status === 4 && record.keyDeclare === '0') || (deductionStatus === 2 && record.keyDeclare === '1' && status !== 5) ){
                 t = composeBotton([{
                     type:'action',
                     icon:'folder',
@@ -169,8 +170,8 @@ const getColumns =(context)=>[
         title: '申报状态',
         dataIndex: 'approvalStatusInfo',
         className:'text-center',
-        render: text=>{
-            if (!text) {
+        render: (text,record)=>{
+            if (record.keyDeclare === '0') {
                 return '--'
             }
             return text
@@ -178,12 +179,15 @@ const getColumns =(context)=>[
     },{
         title: '扣款状态',
         dataIndex: 'deductionStatus',
-        render:text=>{
+        render:(text,record)=>{
+            if (record.keyDeclare === '0') {
+                return '--'
+            }
             deductionStatus.map(o=>{
                 if( parseInt(o.value, 0) === parseInt(text, 0)){
                     text = o.text
                 }
-                return '--';
+                return '';
             })
             return text;
         },
@@ -191,8 +195,8 @@ const getColumns =(context)=>[
         title: '扣款金额',
         dataIndex: 'taxAmount',
         className: "table-money",
-        render: text=>{
-            if (!text) {
+        render: (text,record)=>{
+            if (record.keyDeclare === '0') {
                 return '--'
             }
             return text
