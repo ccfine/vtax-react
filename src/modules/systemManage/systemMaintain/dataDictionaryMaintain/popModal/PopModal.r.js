@@ -239,7 +239,7 @@ class PopModal extends Component{
                                         fieldDecoratorOptions:{
                                             initialValue:initData['description'],
                                             rules:[
-                                                regRules.textarea_length_100,
+                                                regRules.textArea_length_500,
                                             ]
                                         },
                                     }
