@@ -85,22 +85,22 @@ const getColumns =(context)=>[
             let t = '';
             switch (parseInt(text,0)){
                 case 1:
-                    t='申报办理';
+                    t=<span style={{ color: '#44b973' }}>申报办理</span>;
                     break;
                 case 2:
-                    t='申报审核';
+                    t=<span style={{ color: '#2783d8' }}>申报审核</span>;
                     break;
                 case 3:
-                    t='申报审批';
+                    t=<span style={{ color: '#373ac6' }}>申报审批</span>;
                     break;
                 case 4:
-                    t='申报完成';
+                    t=<span style={{ color: '#1795f6' }}>申报完成</span>;
                     break;
                 case 5:
-                    t='归档';
+                    t=<span style={{ color: '#7a7e91' }}>归档</span>;
                     break;
                 case -1:
-                    t='流程终止';
+                    t=<span style={{ color: '#ed2550' }}>流程终止</span>;
                     break;
                 default:
                 //no default

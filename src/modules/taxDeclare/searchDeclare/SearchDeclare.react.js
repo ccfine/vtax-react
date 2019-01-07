@@ -179,6 +179,7 @@ const getColumns =(context)=>[
     },{
         title: '扣款状态',
         dataIndex: 'deductionStatus',
+        className:'text-center',
         render:(text,record)=>{
             if (record.keyDeclare === '0') {
                 return '--'

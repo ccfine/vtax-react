@@ -105,7 +105,7 @@ const getColumns =(context)=>[
             //         }])
             // }
             if (status === 4) {
-                if ((keyDeclare === 0) || (keyDeclare === 1 && record.approvalStatus === '') || (keyDeclare === 1 && parseInt(record.approvalStatus,0) === -2)) {
+                if (keyDeclare === 0 || record.approvalStatus === '' || parseInt(record.approvalStatus,0) === -1 || parseInt(record.approvalStatus,0) === -2) {
                     t = composeBotton([{
                         type:'action',
                         icon:'rollback',
