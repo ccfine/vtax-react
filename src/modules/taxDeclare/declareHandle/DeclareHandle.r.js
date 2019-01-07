@@ -71,6 +71,7 @@ const getColumns =(context)=>[
         render:(text,record)=>{ //1:申报办理,2:申报审核,3:申报审批,4:申报完成,5:归档,-1:流程终止
             let t = undefined;
             let status = parseInt(record.status,0);
+            let keyDeclare = parseInt(record.keyDeclare,0);
             if(status === 1){ //申报办理
                 t = composeBotton([{
                     type:'action',
@@ -87,8 +88,25 @@ const getColumns =(context)=>[
                     }
                 }])
             }
-            if((status === 4 && record.approvalStatus === '') || (status === 4 && parseInt(record.approvalStatus,0)===-1)){
-                t = composeBotton([{
+            // if((status === 4 && record.approvalStatus === '') || (status === 4 && parseInt(record.approvalStatus,0)===-1)){
+            //     t = composeBotton([{
+            //             type:'action',
+            //             icon:'rollback',
+            //             title:'申报撤回',
+            //             userPermissions:['1085005'],
+            //             onSuccess:()=>{
+            //                 context.props.history.push(`/web/taxDeclare/declareHandle/revokeDeclare/${record.id}`)
+            //                 // context.setState({
+            //                 //     record: {...record,decAction:'edit'},
+            //                 // },() => {
+            //                 //     context.toggleApplyVisible(true,'tax/decConduct/list/revoke');
+            //                 // });
+            //             }
+            //         }])
+            // }
+            if (status === 4) {
+                if ((keyDeclare === 0) || (keyDeclare === 1 && record.approvalStatus === '') || (keyDeclare === 1 && parseInt(record.approvalStatus,0) === -2)) {
+                    t = composeBotton([{
                         type:'action',
                         icon:'rollback',
                         title:'申报撤回',
@@ -102,6 +120,7 @@ const getColumns =(context)=>[
                             // });
                         }
                     }])
+                }
             }
             return <span>
                         {
